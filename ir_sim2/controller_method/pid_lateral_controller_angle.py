@@ -1,7 +1,6 @@
 import numpy as np
 from collections import deque
 import math
-from geometry_msgs.msg import Point  # pylint: disable=import-error
 
 
 class PIDLateralController(object):  # pylint: disable=too-few-public-methods
@@ -81,12 +80,9 @@ class PIDLateralController(object):  # pylint: disable=too-few-public-methods
         v_begin_y = current_pose_y
 
         yaw=current_pose_theta
-        v_end = Point()
-        v_end.x = v_begin_x + math.cos(yaw)
-        v_end.y = v_begin_y + math.sin(yaw)
 
 
-        v_vec = np.array([v_end.x - v_begin_x, v_end.y - v_begin_y, 0.0])
+        v_vec = np.array([math.cos(yaw), math.sin(yaw), 0.0])
         w_vec = np.array([waypoint_x -
                           v_begin_x, waypoint_y -
                           v_begin_y, 0.0])

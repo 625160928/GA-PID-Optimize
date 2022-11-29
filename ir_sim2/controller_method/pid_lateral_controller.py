@@ -1,8 +1,10 @@
 import numpy as np
 from collections import deque
 import math
-from geometry_msgs.msg import Point  # pylint: disable=import-error
-
+class Point():
+    def __init__(self):
+        self.x=0
+        self.y=0
 
 class PIDLateralController(object):  # pylint: disable=too-few-public-methods
     """
@@ -76,20 +78,17 @@ class PIDLateralController(object):  # pylint: disable=too-few-public-methods
         """
         v_begin_x = current_pose_x
         v_begin_y = current_pose_y
-
         yaw=current_pose_theta
-        v_end = Point()
-        v_end.x = v_begin_x + math.cos(yaw)
-        v_end.y = v_begin_y + math.sin(yaw)
 
-        v_vec = np.array([v_end.x - v_begin_x, v_end.y - v_begin_y, 0.0])
+        v_vec = np.array([math.cos(yaw), math.sin(yaw), 0.0])
         w_vec = np.array([waypoint_x -
                           v_begin_x, waypoint_y -
                           v_begin_y, 0.0])
-
-        _dot = math.acos(np.clip(
-            np.dot(w_vec, v_vec) /(np.linalg.norm(w_vec) * np.linalg.norm(v_vec))
-            , -1.0, 1.0))
+        if np.dot(w_vec, v_vec)==0 or np.linalg.norm(w_vec)==0 or np.linalg.norm(v_vec)==0:
+            tmp_dot=0
+        else:
+            tmp_dot=np.dot(w_vec, v_vec) /(np.linalg.norm(w_vec) * np.linalg.norm(v_vec))
+        _dot = math.acos(np.clip(tmp_dot, -1.0, 1.0))
 
         _cross = np.cross(v_vec, w_vec)
         if _cross[2] < 0:
@@ -103,6 +102,7 @@ class PIDLateralController(object):  # pylint: disable=too-few-public-methods
         self.error_derivative = self.error - previous_error
 
         output = self._K_P * self.error + self._K_I * self.error_integral + self._K_D * self.error_derivative
+        # print('output ',output)
         #会返回一个范围从-1到1的数值
         return np.clip(output, -1.0, 1.0)
 
