@@ -2,12 +2,15 @@ import yaml
 import math
 import numpy as np
 import time
+import matplotlib.pyplot as plt
+
 from ir_sim2.env import EnvBase
 from ir_sim2.controller_method.pid_lateral_controller import PIDLateralController
 
 
-def env1_test(env,controller,route,max_iter=3000,speed=1,show_cartoon=False):
+def env1_test(env,controller,route,max_iter=3000,speed=1,end_dist=1.0,show_cartoon=False):
     total_error=0
+    route_x,route_y,route_theta_r=change_path_type3(route)
     for i in range(max_iter):
         #获取车辆当前位置
         car_state=env.robot_list[0].state
@@ -24,25 +27,25 @@ def env1_test(env,controller,route,max_iter=3000,speed=1,show_cartoon=False):
         now_error=shortest_dis
         total_error+=now_error
 
+
+
         #计算控制
         steer_control=controller.run_step(car_position_x,car_position_y,car_position_theta_r,
                                           route[ind][0],route[ind][1])
-        car_control=[[[speed],[steer_control]]]
-        # print('=========')
-        # print(car_control[0],type(car_control))
-        # print('control',steer_control)
-        # print(des_vel)
 
-        # des_vel = env.cal_des_vel()
-        # car_control=des_vel
-        # print(car_control[0],type(car_control))
+        car_control=[[[speed],[steer_control]]]
 
         #仿真控制
         env.step(car_control)
         if show_cartoon:
+            plt.plot(route_x,route_y,color='black')
             env.render(0.05)
 
-        if env.done():
+        #结束判断
+        goal_dis=math.hypot(route[-1][0]-car_position_x,route[-1][1]-car_position_y)
+        if goal_dis<=end_dist:
+            print('reach goal')
+        if env.done() or goal_dis<=end_dist:
             return total_error
     return total_error
 
@@ -71,11 +74,22 @@ def get_route1(start_point,end_point,step=0.1):
         theta_arr.append(theta_r)
     return x_arr,y_arr,theta_arr
 
-def change_path_type(route_x,route_y,route_theta_r):
+def change_path_type1(route_x,route_y,route_theta_r):
     route=[]
     for i in range(len(route_y)):
         route.append([route_x[i],route_y[i],route_theta_r[i]])
     return route
+
+def change_path_type3(route):
+    route_x, route_y, route_theta_r=[],[],[]
+    for i in range(len(route)):
+        route_x.append(route[i][0])
+        route_y.append(route[i][1])
+        route_theta_r.append(route[i][2])
+
+
+
+    return route_x, route_y, route_theta_r
 
 def get_shortest_point(car_position_x,car_position_y,path):
     ind=0
@@ -94,7 +108,11 @@ def main():
     car_steer_limit=30 /180*math.pi
     #每步的时间
     dt=0.1
+    #是否显示动画
     show_process=False
+    # show_process=True
+    #离终点多近算结束
+    goal_dist=1
 
     #pid的参数
     K_P = 0.5
@@ -106,7 +124,7 @@ def main():
 
     #获取需要跟踪的路径
     path_x,path_y,path_theta_r=get_route1([0,20,0],[40,20,0])
-    path=change_path_type(path_x,path_y,path_theta_r)
+    path=change_path_type1(path_x,path_y,path_theta_r)
 
     #设置车辆起点终点
     start_point=path[0]
@@ -134,7 +152,7 @@ def main():
 
     start_time=time.time()
     #仿真训练
-    t1_error=env1_test(env,pid_controller,route=path,speed=car_speed,show_cartoon=show_process)
+    t1_error=env1_test(env,pid_controller,route=path,speed=car_speed,end_dist=goal_dist,show_cartoon=show_process)
     end_time=time.time()
     print('cost time ',end_time-start_time,'s')
 
