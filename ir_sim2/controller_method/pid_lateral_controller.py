@@ -104,7 +104,7 @@ class PIDLateralController(object):  # pylint: disable=too-few-public-methods
         output = self._K_P * self.error + self._K_I * self.error_integral + self._K_D * self.error_derivative
         # print('output ',output)
         #会返回一个范围从-1到1的数值
-        return np.clip(output, -1.0, 1.0)
+        return np.clip(output, -1.0, 1.0)*self.__car_steer_limit
 
     #x, y, theta 车辆位置
     #route_x, route_y, route_theta 路径点集
@@ -133,5 +133,5 @@ class PIDLateralController(object):  # pylint: disable=too-few-public-methods
             re=-1
         else:
             re=1
-        return now_car_speed, (np.float)(re*w*self.__car_steer_limit),ind
+        return now_car_speed, (np.float)(re*w),ind
         # return now_car_speed, (np.float)(w) ,ind
