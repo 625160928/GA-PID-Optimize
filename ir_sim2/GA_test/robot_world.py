@@ -22,7 +22,8 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=3000, speed=1,
         car_position_x=car_state[0][0]
         car_position_y=car_state[1][0]
         car_position_theta_r=car_state[2][0]
-        car_speed=car_state[3][0]
+        car_speed=env.robot_list[0].vel
+        # print('speed ',car_speed,)
         pose_list.append([car_position_x,car_position_y,car_position_theta_r])
 
 
@@ -154,7 +155,7 @@ def main():
     ang_K_I = 0
 
     #设置车辆的移动速度
-    car_speed=2
+    car_speed=4
 
     #获取需要跟踪的路径
     path_x,path_y,path_theta_r=get_route1([0,20,0],[40,20,0])
@@ -163,7 +164,6 @@ def main():
     #设置车辆起点终点
     start_point=path[0]
     end_point=path[-1]
-    start_point[1]-=1
 
     #加载设置文件参数
     f = open(config_file, 'r', encoding='utf-8')

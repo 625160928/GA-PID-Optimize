@@ -95,7 +95,7 @@ class PIDLateralAngleController(object):  # pylint: disable=too-few-public-metho
 
         yaw_error1=waypointyaw-yaw
 
-        yaw_error2=math.acos(np.clip(lateral_error/(self.__dt*(speed)), -1.0, 1.0))
+        # yaw_error2=math.acos(np.clip(lateral_error/(self.__dt*(speed)), -1.0, 1.0))
 
         _dot=yaw_error1
         #if _cross[2] < 0:
