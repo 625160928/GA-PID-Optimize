@@ -3,7 +3,7 @@ from collections import deque
 import math
 
 
-class PIDLateralController(object):  # pylint: disable=too-few-public-methods
+class PIDLateralAngleController(object):  # pylint: disable=too-few-public-methods
     """
     PIDLateralController implements lateral control using a PID.
     """
@@ -88,21 +88,21 @@ class PIDLateralController(object):  # pylint: disable=too-few-public-methods
                           v_begin_y, 0.0])
 
         _cross = np.cross(v_vec, w_vec)
-        if abs(speed)<0.1:
-            self.error_list.append(self.error)
-            return 0
+        # if abs(speed)<0.1:
+        #     self.error_list.append(self.error)
+        #     return 0
         lateral_error=-(v_begin_x-waypoint_x )*math.sin(waypointyaw) +(v_begin_y-waypoint_y )*math.cos(waypointyaw)
 
         yaw_error1=waypointyaw-yaw
 
-        yaw_error2=math.acos(np.clip(lateral_error/(self.__dt*(speed)), -1.0, 1.0))
+        # yaw_error2=math.acos(np.clip(lateral_error/(self.__dt*(speed)), -1.0, 1.0))
 
         _dot=yaw_error1
         #if _cross[2] < 0:
         _dot *= -1.0
 
         previous_error = self.error
-        print('waypointyaw',waypointyaw,'error ', _dot)
+        # print('waypointyaw',waypointyaw,'error ', _dot)
         self.error = _dot
         self.lateral_error_list.append(lateral_error)
         self.error_list.append(self.error*180/math.pi)
@@ -110,16 +110,16 @@ class PIDLateralController(object):  # pylint: disable=too-few-public-methods
         # restrict integral term to avoid integral windup
         self.error_integral = np.clip(self.error_integral + self.error, -400.0, 400.0)
         self.error_derivative = self.error - previous_error
-
+        # print('error ', self.error)
         output = self._K_P * self.error + self._K_I * self.error_integral + self._K_D * self.error_derivative
         #会返回一个范围从-1到1的数值
-        return np.clip(output, -1.0, 1.0)
+        return np.clip(output, -1.0, 1.0)*self.__car_steer_limit
 
     #x, y, theta 车辆位置
     #route_x, route_y, route_theta 路径点集
     #pind 之前追踪的目标点
     #ai 当前需要的加速度
-    def control(self, x, y, theta, v, route_x, route_y, route_theta, ai):
+    def control(self, x, y, theta, v, route_x, route_y, route_theta):
 
         ind = self.__pure_pursuit_calc_target_index(x, y, v, route_x, route_y)
 
@@ -137,12 +137,5 @@ class PIDLateralController(object):  # pylint: disable=too-few-public-methods
             ind = len(route_x) - 1
 
         w=self.run_step(x, y, theta,tx,ty,tyaw,v)
-        # delta, ind =self.__pure_pursuit_control( x, y, theta, v, route_x, route_y,pind)
-
-        now_car_speed= self.__get_v_from_ai_di(v, ai)
-        if now_car_speed<0:
-            re=-1
-        else:
-            re=1
-        return now_car_speed, (np.float)(re*w*self.__car_steer_limit),ind
+        return (w)
         # return now_car_speed, (np.float)(w) ,ind
