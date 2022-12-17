@@ -170,8 +170,9 @@ def main():
     path=change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v)
 
     #设置车辆起点终点
-    start_point=path[0][0:2]
-    end_point=path[-1][0:2]
+    start_point=path[0][0:3]
+    end_point=path[-1][0:3]
+    # print('===============',start_point,end_point)
 
     #加载设置文件参数
     f = open(config_file, 'r', encoding='utf-8')
