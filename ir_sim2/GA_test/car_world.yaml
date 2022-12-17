@@ -1,8 +1,7 @@
 robots:
   goal:
-  - 39.9000000000003
-  - 20.0
-  - 0.0
+  - 39.800000000000004
+  - 20.862760643685675
   number: 1
   shape:
   - 4.6
@@ -12,7 +11,6 @@ robots:
   state:
   - 0
   - 20
-  - 0.0
   - 0
   type: robot_acker
   vel_type: steer
