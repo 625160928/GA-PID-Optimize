@@ -31,7 +31,7 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, 
             dis_controller.set_parm(p = parm[0], i = parm[1], d = parm[2])
             ang_controller.set_parm(p = parm[3], i = parm[4], d = parm[5])
         
-        print('speed {}'.format(car_speed))
+        # print('speed {}'.format(car_speed))
         pose_list.append([car_position_x,car_position_y,car_position_theta_r])
 
 
@@ -224,7 +224,7 @@ def test_pid_parameter(model):
     # plt.plot(path_x,path_y)
     # plt.plot(pose_list_x,pose_list_y)
 
-    plt.show()
+    # plt.show()
 
 
     print('error is ',t1_error)

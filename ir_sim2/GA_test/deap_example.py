@@ -19,8 +19,13 @@ LOW1, UP1 = 0 , 10
 LOW2, UP2 = 0 , 1
 
 BOUNDS = [(LOW2, UP2) for i in range(NDIM)]
+MEAN = [0.5 for i in range(NDIM)]
+SIGMA = [0.1 for i in range(NDIM)]
 for i in range(8):
     BOUNDS[i*3] = (LOW1,UP1)
+    MEAN[i*3] = 1
+    SIGMA[i*3] = 0.2
+    pass
 
 
 toolbox = base.Toolbox()
@@ -34,7 +39,7 @@ def init_opti():
 
     toolbox.register("evaluate", evaluation)
     toolbox.register("mate", tools.cxOnePoint)
-    toolbox.register("mutate", tools.mutGaussian, mu=[2,0.5,0.5], sigma=[0.5,0.1,0.1], indpb=0.1)
+    toolbox.register("mutate", tools.mutGaussian, mu=MEAN, sigma=SIGMA, indpb=0.1)
     toolbox.register("select", tools.selNSGA2)
     
 def init_ind(icls, ranges):
