@@ -28,8 +28,8 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, 
         # print('speed ', car_speed)
         # print(rbf_model!=None)
         if rbf_model!=None :
-            parm=rbf_model.predict(np.asarray(car_speed).reshape(-1,1)).reshape(-1)
-            # parm=rbf_model.get_parm(car_speed)
+            # parm=rbf_model.predict(np.asarray(car_speed).reshape(-1,1)).reshape(-1)
+            parm=rbf_model.get_parm(car_speed)
             # print(parm)
             dis_controller.set_parm(p = parm[0], i = parm[1], d = parm[2])
             ang_controller.set_parm(p = parm[3], i = parm[4], d = parm[5])
@@ -58,7 +58,7 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, 
 
         steer_control=np.clip(steer_control_dis+steer_control_ang,-steer_limit,steer_limit)
 
-        print('control ',steer_control,steer_control_dis,steer_control_ang)
+        # print('control ',steer_control,steer_control_dis,steer_control_ang)
         if use_route_speed==True:
             car_control=[[[route[ind][3]],[steer_control]]]
         else:
@@ -245,8 +245,8 @@ def test_model_in_all_env(model):
     #每步的时间
     dt=0.1
     #是否显示动画
-    # show_process=False
-    show_process=True
+    show_process=False
+    # show_process=True
     # 离终点多近算结束
     goal_dist=1
 
