@@ -4,8 +4,7 @@ import numpy as np
 import random
 import yaml
 from robot_world import test_pid_parameter
-from sklearn.gaussian_process.kernels import RBF
-from sklearn.gaussian_process import GaussianProcessClassifier
+from sklearn.kernel_ridge import KernelRidge
 
 NGEN = 50 # Number of Generation
 MU = 100 # Number of individual in population
@@ -48,12 +47,11 @@ def init_ind(icls, ranges):
 def evaluation(ind):
     # lock.acquire()
     # try:
-    models = []
-    X = np.range(0.5,4,1)
-    kernel = 1.0 * RBF(1.0)
-    for i in range(6):
-        pass
-    objective1,objective2 = test_pid_parameter(models=models)
+    X = np.arange(0.5,4,1).reshape(-1,1)
+    y = ind.reshape(-1,6)
+    model = KernelRidge(alpha=1.0)
+    model.fit(X,y)
+    objective1,objective2 = test_pid_parameter(model=model)
     # finally:
     #     lock.release()
     
