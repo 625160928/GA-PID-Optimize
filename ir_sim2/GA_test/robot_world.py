@@ -11,7 +11,7 @@ from ir_sim2.controller_method.pid_lateral_controller import PIDLateralControlle
 from ir_sim2.controller_method.pid_lateral_controller_angle import PIDLateralAngleController
 
 
-def env1_test(env, dis_controller,ang_controller, route, max_iter=3000, speed=1, end_dist=1.0, show_cartoon=False):
+def env1_test(env, dis_controller,ang_controller, route, max_iter=3000, speed=1, end_dist=1.0, show_cartoon=False,use_route_speed=False):
     steer_limit=45/180*math.pi
     total_error=0
     pose_list=[]
@@ -48,8 +48,10 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=3000, speed=1,
 
         steer_control=np.clip(steer_control_dis+steer_control_ang,-steer_limit,steer_limit)
 
-
-        car_control=[[[speed],[steer_control]]]
+        if use_route_speed==True:
+            car_control=[[[route[ind][3]],[steer_control]]]
+        else:
+            car_control=[[[speed],[steer_control]]]
 
         #仿真控制
         env.step(car_control)
@@ -167,7 +169,7 @@ def main():
     # path_x,path_y,path_theta_r=get_route1([0,20,0],[40,20,0])
     # path_x,path_y,path_theta_r,path_v=get_route_s([0,20,0],[40,20,0],speed=1)
     # path_x,path_y,path_theta_r,path_v=get_route_circle([20,20],15,speed=1)
-    path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=0.5)
+    path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=1)
 
     path=change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v)
 
@@ -198,7 +200,8 @@ def main():
 
     start_time=time.time()
     #仿真训练
-    t1_error,pose_list=env1_test(env,pid_distance_controller, pid_angle_controller,route=path,speed=car_speed,end_dist=goal_dist,show_cartoon=show_process)
+    t1_error,pose_list=env1_test(env,pid_distance_controller, pid_angle_controller,route=path,speed=car_speed
+                                 ,end_dist=goal_dist,show_cartoon=show_process,use_route_speed=True)
 
     end_time=time.time()
     print('cost time ',end_time-start_time,'s')
