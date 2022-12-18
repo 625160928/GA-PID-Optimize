@@ -228,7 +228,7 @@ def test_pid_parameter(model):
     # plt.plot(path_x,path_y)
     # plt.plot(pose_list_x,pose_list_y)
 
-    plt.show()
+    # plt.show()
 
 
     print('error is ',t1_error)
