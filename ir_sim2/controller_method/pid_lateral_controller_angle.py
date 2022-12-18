@@ -42,7 +42,7 @@ class PIDLateralAngleController(object):  # pylint: disable=too-few-public-metho
         v = car_speed + acc * self.__dt
         return v
 
-    def set_par(self,p,i,d):
+    def set_parm(self,p,i,d):
         self._K_P=p
         self._K_D=d
         self._K_I=i

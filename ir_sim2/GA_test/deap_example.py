@@ -6,7 +6,7 @@ import yaml
 from robot_world import test_pid_parameter
 from sklearn.kernel_ridge import KernelRidge
 
-NGEN = 50 # Number of Generation
+NGEN = 100 # Number of Generation
 MU = 100 # Number of individual in population
 CXPB = 0.8 #Crossover probability
 NDIM = 24 # Number of dimension of the individual (=number of gene)
@@ -15,7 +15,7 @@ with open('car_world.yaml') as f:
 lock = multiprocessing.Lock()
 
 # Bounds on the first 3 genes
-LOW1, UP1 = 0 , 4
+LOW1, UP1 = 0 , 10
 LOW2, UP2 = 0 , 1
 
 BOUNDS = [(LOW2, UP2) for i in range(NDIM)]
@@ -48,7 +48,7 @@ def evaluation(ind):
     # lock.acquire()
     # try:
     X = np.arange(0.5,4,1).reshape(-1,1)
-    y = ind.reshape(-1,6)
+    y = np.asarray(ind).reshape(-1,6)
     model = KernelRidge(alpha=1.0)
     model.fit(X,y)
     objective1,objective2 = test_pid_parameter(model=model)
