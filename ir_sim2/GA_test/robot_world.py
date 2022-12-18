@@ -4,6 +4,7 @@ import numpy as np
 import time
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
+from ir_sim2.GA_test.route_files import get_route_s,get_route_circle,get_route_U
 
 from ir_sim2.env import EnvBase
 from ir_sim2.controller_method.pid_lateral_controller import PIDLateralController
@@ -96,10 +97,15 @@ def get_route1(start_point,end_point,step=0.1):
         theta_arr.append(theta_r)
     return x_arr,y_arr,theta_arr
 
-def change_path_type1(route_x,route_y,route_theta_r):
+def change_path_type1(route_x,route_y,route_theta_r,speed_arr=None):
     route=[]
+    # print(len(speed_arr),len(route_y))
     for i in range(len(route_y)):
-        route.append([route_x[i],route_y[i],route_theta_r[i]])
+        if speed_arr==None:
+            route.append([route_x[i],route_y[i],route_theta_r[i]])
+        else:
+
+            route.append([route_x[i],route_y[i],route_theta_r[i],speed_arr[i]])
     return route
 
 def change_path_type3(route):
@@ -234,11 +240,11 @@ def main():
     goal_dist=1
 
     #pid的参数
-    dis_K_P = 0.02
+    dis_K_P = 0.3
     dis_K_D = 0.05
     dis_K_I = 0
 
-    ang_K_P = 0.2
+    ang_K_P = 0.1
     ang_K_D = 0.05
     ang_K_I = 0
 
@@ -246,12 +252,17 @@ def main():
     car_speed=4
 
     #获取需要跟踪的路径
-    path_x,path_y,path_theta_r=get_route1([0,20,0],[40,20,0])
-    path=change_path_type1(path_x,path_y,path_theta_r)
+    # path_x,path_y,path_theta_r=get_route1([0,20,0],[40,20,0])
+    # path_x,path_y,path_theta_r,path_v=get_route_s([0,20,0],[40,20,0],speed=1)
+    # path_x,path_y,path_theta_r,path_v=get_route_circle([20,20],15,speed=1)
+    path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=0.5)
+
+    path=change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v)
 
     #设置车辆起点终点
-    start_point=path[0]
-    end_point=path[-1]
+    start_point=path[0][0:3]
+    end_point=path[-1][0:3]
+    # print('===============',start_point,end_point)
 
     #加载设置文件参数
     f = open(config_file, 'r', encoding='utf-8')
