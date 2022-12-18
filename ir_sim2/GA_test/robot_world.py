@@ -4,7 +4,7 @@ import numpy as np
 import time
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
-from ir_sim2.GA_test.route_files import get_route_s,get_route_circle,get_route_U
+from ir_sim2.GA_test.route_files import get_route_s,get_route_circle,get_route_U,get_route_dir
 
 from ir_sim2.env import EnvBase
 from ir_sim2.controller_method.pid_lateral_controller import PIDLateralController
@@ -23,15 +23,18 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, 
         car_position_x=car_state[0][0]
         car_position_y=car_state[1][0]
         car_position_theta_r=car_state[2][0]
-        car_speed=env.robot_list[0].vel
-        
-        
-        if rbf_model!=None:
+        car_speed=env.robot_list[0].vel[0][0]
+
+        # print('speed ', car_speed)
+        # print(rbf_model!=None)
+        if rbf_model!=None :
             parm=rbf_model.predict(np.asarray(car_speed).reshape(-1,1)).reshape(-1)
+            # parm=rbf_model.get_parm(car_speed)
+            # print(parm)
             dis_controller.set_parm(p = parm[0], i = parm[1], d = parm[2])
             ang_controller.set_parm(p = parm[3], i = parm[4], d = parm[5])
         
-        print('speed {}'.format(car_speed))
+        # print('speed {}'.format(car_speed))
         pose_list.append([car_position_x,car_position_y,car_position_theta_r])
 
 
@@ -55,6 +58,7 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, 
 
         steer_control=np.clip(steer_control_dis+steer_control_ang,-steer_limit,steer_limit)
 
+        print('control ',steer_control,steer_control_dis,steer_control_ang)
         if use_route_speed==True:
             car_control=[[[route[ind][3]],[steer_control]]]
         else:
@@ -233,6 +237,91 @@ def test_pid_parameter(model):
     return t1_error,iter_times
 
 
+def test_model_in_all_env(model):
+    #参数文件
+    config_file='car_world.yaml'
+    #车辆转向限制
+    car_steer_limit=45 /180*math.pi
+    #每步的时间
+    dt=0.1
+    #是否显示动画
+    # show_process=False
+    show_process=True
+    # 离终点多近算结束
+    goal_dist=1
+
+    #pid的参数
+    dis_K_P = 0.3
+    dis_K_D = 0.05
+    dis_K_I = 0
+
+    ang_K_P = 0.1
+    ang_K_D = 0.05
+    ang_K_I = 0
+
+    #设置车辆的移动速度
+    car_speed=4
+
+    path_arr=[]
+
+    #获取需要跟踪的路径
+    path_x,path_y,path_theta_r,path_v=get_route_dir([0,20,0],[40,20,0],speed=car_speed)
+    path_arr.append(change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v))
+
+    path_x,path_y,path_theta_r,path_v=get_route_s([0,20,0],[40,20,0],speed=car_speed)
+    path_arr.append(change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v))
+
+    path_x,path_y,path_theta_r,path_v=get_route_circle([20,20],15,speed=car_speed)
+    path_arr.append(change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v))
+
+    path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=car_speed)
+    path_arr.append(change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v))
+
+    total_error=0
+    total_iter=0
+
+    for path in path_arr:
+
+        #设置车辆起点终点
+        start_point=path[0][0:3]
+        end_point=path[-1][0:3]
+
+        #加载设置文件参数
+        f = open(config_file, 'r', encoding='utf-8')
+        cont = f.read()
+        parm = yaml.load(cont,Loader=yaml.FullLoader)
+        L=parm['robots']['shape'][2]
+
+        #重新设置配置文件中车辆位置
+        parm['robots']['state']=start_point+[0]
+        parm['robots']['goal']=end_point
+        with open(config_file, 'w') as file:
+            file.write(yaml.dump(parm, allow_unicode=True))
+
+        #设置仿真环境
+        env = EnvBase(config_file)
+        env.plot=show_process
+
+        #设置pid控制器
+        pid_distance_controller=PIDLateralController(L,dt,car_steer_limit,dis_K_P,dis_K_D,dis_K_I)
+        pid_angle_controller=PIDLateralAngleController(L,dt,car_steer_limit,ang_K_P,ang_K_D,ang_K_I)
+
+        start_time=time.time()
+        # print(model==None)
+        #仿真训练
+        t1_error,pose_list,iter_times=env1_test(env,pid_distance_controller, pid_angle_controller,route=path,
+                                                speed=car_speed,end_dist=goal_dist,show_cartoon=show_process,rbf_model=model,use_route_speed=True)
+
+        end_time=time.time()
+        env.end()
+        print('cost time ',end_time-start_time,'s',iter_times)
+        print('error is ',t1_error)
+        total_iter+=iter_times
+        total_error+=t1_error
+
+    return total_error,total_iter
+
+
 def main():
     #参数文件
     config_file='car_world.yaml'
@@ -320,6 +409,24 @@ def main():
 
     env.end()
 
+
+def test_rbf_parm_pid():
+    from ir_sim2.GA_test.rbf_pid import RbfPid
+    v_arr=[]
+    parm_arr=[]
+    v_arr.append([4])
+    parm_arr.append([0.2,0.05,0,0.0,0.00,0])
+    v_arr.append([2])
+    parm_arr.append([0.2,0.05,0,0.2,0.05,0])
+    v_arr.append([1])
+    parm_arr.append([0.5,0.05,0,0.3,0.05,0])
+    # print(v_arr)
+    # print(parm_arr)
+    model=RbfPid(v_arr,parm_arr)
+
+
+    test_model_in_all_env(model)
+
 if __name__=="__main__":
-    main()
+    test_rbf_parm_pid()
     

@@ -28,7 +28,6 @@ def get_route_s(start_point,end_point,step=0.1,speed=4):
 
     return x_arr,y_arr,theta_arr,v_arr
 
-
 def get_route_circle(center,radiu,step=0.1,speed=4):
     x_arr=[]
     y_arr=[]
@@ -58,7 +57,6 @@ def get_route_circle(center,radiu,step=0.1,speed=4):
 
 
     return x_arr,y_arr,theta_arr,v_arr
-
 
 def get_route_U(dis,center,radiu,step=0.1,speed=4):
     x_arr=[]
@@ -163,4 +161,33 @@ def get_route_U(dis,center,radiu,step=0.1,speed=4):
 
 
 
+    return x_arr,y_arr,theta_arr,v_arr
+
+
+def get_route_dir(start_point,end_point,step=0.1,speed=1):
+    x_arr=[]
+    y_arr=[]
+    theta_arr=[]
+    v_arr=[]
+    theta_r=math.atan2(end_point[1]-start_point[1],end_point[0]-start_point[0])
+    dist=math.hypot(end_point[1]-start_point[1],end_point[0]-start_point[0])
+    numb=int(dist/step)
+    dir_x=math.cos(theta_r)*step
+    dir_y=math.sin(theta_r)*step
+    #路径起点
+    now_pose_x=start_point[0]
+    now_pose_y=start_point[1]
+    #添加起点
+    x_arr.append(start_point[0])
+    y_arr.append(start_point[1])
+    theta_arr.append(theta_r)
+    v_arr.append(speed)
+
+    for i in range(numb-1):
+        now_pose_x+=dir_x
+        now_pose_y+=dir_y
+        x_arr.append(now_pose_x)
+        y_arr.append(now_pose_y)
+        theta_arr.append(theta_r)
+        v_arr.append(speed)
     return x_arr,y_arr,theta_arr,v_arr

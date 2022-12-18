@@ -32,7 +32,9 @@ class RBFmodel():
     def cal_labuda(self,use_search=False):
         if use_search==False:
             re_core=np.linalg.inv(self.__core_table)
-            self.__labuda= self.__label @ re_core
+
+            # print(self.__label.shape,re_core.shape)
+            self.__labuda=  re_core @ self.__label
             # for i in range(len(self.__labuda)):
             #     for j in range(len(self.__labuda)):
             #         print(self.__labuda[i][j],end = ' ')
@@ -41,12 +43,13 @@ class RBFmodel():
     def get_solution(self,input_data_once):
         data=[]
         for i in range(len(self.__data)):
+            # print(i,self.__data[i],input_data_once,(self.__data[i] - input_data_once))
             d=np.sqrt(sum((self.__data[i] - input_data_once) ** 2))
             data.append(self.__core_cal(d))
         data=np.array(data)
         # print(data)
-        # print(data.shape)
-        # print(self.__labuda.shape)
+        # print('data shape ',data.shape)
+        # print('labuda shape ',self.__labuda.shape)
         ans=data@self.__labuda
         # print(ans.shape)
         return ans
