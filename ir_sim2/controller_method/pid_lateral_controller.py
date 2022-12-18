@@ -37,6 +37,11 @@ class PIDLateralController(object):  # pylint: disable=too-few-public-methods
         self.__car_steer_limit = car_steer_limit
         self.__pind=0
 
+    def set_par(self,p,i,d):
+        self._K_P=p
+        self._K_D=d
+        self._K_I=i
+        
     #将加速度与横向偏移变成车辆速度与角速度
     def __get_v_from_ai_di(self, car_speed, acc):
         v = car_speed + acc * self.__dt

@@ -42,6 +42,10 @@ class PIDLateralAngleController(object):  # pylint: disable=too-few-public-metho
         v = car_speed + acc * self.__dt
         return v
 
+    def set_par(self,p,i,d):
+        self._K_P=p
+        self._K_D=d
+        self._K_I=i
     # 搜索最临近的路点
     def __calc_target_index(self, x, y, route_x, route_y):
         dx = [x - icx for icx in route_x]
