@@ -204,7 +204,7 @@ def test_pid_parameter(model):
 
     start_time=time.time()
     #仿真训练
-    t1_error,pose_list=env1_test(env,pid_distance_controller, pid_angle_controller,route=path,speed=car_speed,end_dist=goal_dist,show_cartoon=show_process)
+    t1_error,pose_list,iter_times=env1_test(env,pid_distance_controller, pid_angle_controller,route=path,speed=car_speed,end_dist=goal_dist,show_cartoon=show_process)
 
     end_time=time.time()
     print('cost time ',end_time-start_time,'s')
@@ -293,7 +293,7 @@ def main():
 
     start_time=time.time()
     #仿真训练
-    t1_error,pose_list=env1_test(env,pid_distance_controller, pid_angle_controller,route=path,speed=car_speed,end_dist=goal_dist,show_cartoon=show_process)
+    t1_error,pose_list,iter_times=env1_test(env,pid_distance_controller, pid_angle_controller,route=path,speed=car_speed,end_dist=goal_dist,show_cartoon=show_process)
 
     end_time=time.time()
     print('cost time ',end_time-start_time,'s')
