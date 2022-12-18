@@ -4,7 +4,7 @@ import numpy as np
 import time
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
-from ir_sim2.GA_test.route_files import get_route_s,get_route_circle
+from ir_sim2.GA_test.route_files import get_route_s,get_route_circle,get_route_U
 
 from ir_sim2.env import EnvBase
 from ir_sim2.controller_method.pid_lateral_controller import PIDLateralController
@@ -152,7 +152,7 @@ def main():
     goal_dist=1
 
     #pid的参数
-    dis_K_P = 0.15
+    dis_K_P = 0.3
     dis_K_D = 0.05
     dis_K_I = 0
 
@@ -166,7 +166,8 @@ def main():
     #获取需要跟踪的路径
     # path_x,path_y,path_theta_r=get_route1([0,20,0],[40,20,0])
     # path_x,path_y,path_theta_r,path_v=get_route_s([0,20,0],[40,20,0],speed=1)
-    path_x,path_y,path_theta_r,path_v=get_route_circle([20,20],15,speed=1)
+    # path_x,path_y,path_theta_r,path_v=get_route_circle([20,20],15,speed=1)
+    path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=0.5)
 
     path=change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v)
 
