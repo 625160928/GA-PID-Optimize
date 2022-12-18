@@ -10,7 +10,7 @@ from ir_sim2.controller_method.pid_lateral_controller import PIDLateralControlle
 from ir_sim2.controller_method.pid_lateral_controller_angle import PIDLateralAngleController
 
 
-def env1_test(env, dis_controller,ang_controller, route, max_iter=3000, speed=1, end_dist=1.0, show_cartoon=False):
+def env1_test(env, dis_controller,ang_controller, route, max_iter=3000, speed=1, end_dist=1.0, show_cartoon=False,rbf_model=None):
     steer_limit=45/180*math.pi
     total_error=0
     pose_list=[]
@@ -23,6 +23,13 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=3000, speed=1,
         car_position_y=car_state[1][0]
         car_position_theta_r=car_state[2][0]
         car_speed=env.robot_list[0].vel
+        
+        
+        if rbf_model!=None:
+            parm=rbf_model(car_speed)
+            dis_controller.set_parm()
+            ang_controller.set_parm()
+        
         # print('speed ',car_speed,)
         pose_list.append([car_position_x,car_position_y,car_position_theta_r])
 
@@ -61,8 +68,8 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=3000, speed=1,
         if goal_dis<=end_dist:
             print('reach goal')
         if env.done() or goal_dis<=end_dist:
-            return total_error,pose_list
-    return total_error,pose_list
+            return total_error,pose_list,i
+    return total_error,pose_list,i
 
 def get_route1(start_point,end_point,step=0.1):
     x_arr=[]
@@ -129,7 +136,88 @@ def anylize_path_error(ori_path,real_path):
     # print(error_list)
     return error_list
 
+def test_pid_parameter(model):
+    #参数文件
+    config_file='car_world.yaml'
+    #车辆转向限制
+    car_steer_limit=45 /180*math.pi
+    #每步的时间
+    dt=0.1
+    #是否显示动画
+    # show_process=False
+    show_process=True
+    # 离终点多近算结束
+    goal_dist=1
 
+    #pid的参数
+    dis_K_P = 0.02
+    dis_K_D = 0.05
+    dis_K_I = 0
+
+    ang_K_P = 0.2
+    ang_K_D = 0.05
+    ang_K_I = 0
+
+    #设置车辆的移动速度
+    car_speed=4
+
+    #获取需要跟踪的路径
+    path_x,path_y,path_theta_r=get_route1([0,20,0],[40,20,0])
+    path=change_path_type1(path_x,path_y,path_theta_r)
+
+    #设置车辆起点终点
+    start_point=path[0]
+    end_point=path[-1]
+
+    #加载设置文件参数
+    f = open(config_file, 'r', encoding='utf-8')
+    cont = f.read()
+    parm = yaml.load(cont,Loader=yaml.FullLoader)
+    L=parm['robots']['shape'][2]
+
+    #重新设置配置文件中车辆位置
+    parm['robots']['state']=start_point+[0]
+    parm['robots']['goal']=end_point
+    with open(config_file, 'w') as file:
+        file.write(yaml.dump(parm, allow_unicode=True))
+
+    #设置仿真环境
+    env = EnvBase(config_file)
+    env.plot=show_process
+
+    #设置pid控制器
+    pid_distance_controller=PIDLateralController(L,dt,car_steer_limit,dis_K_P,dis_K_D,dis_K_I)
+    pid_angle_controller=PIDLateralAngleController(L,dt,car_steer_limit,ang_K_P,ang_K_D,ang_K_I)
+
+    start_time=time.time()
+    #仿真训练
+    t1_error,pose_list,iter_times=env1_test(env,pid_distance_controller, pid_angle_controller,route=path,speed=car_speed,end_dist=goal_dist,show_cartoon=show_process,rbf_model=model)
+
+    end_time=time.time()
+    print('cost time ',end_time-start_time,'s')
+
+    pose_list_x,pose_list_y,pose_list_theta_r=change_path_type3(pose_list)
+    #分析数据
+    error_list=anylize_path_error(ori_path=path,real_path=pose_list)
+    x_arr=np.arange(1,len(error_list)+1,1)*dt
+
+    #误差绘图
+    # plt.axis([1,x_arr[-1], -1,2])
+    # plt.xlabel('x[t]')
+    # plt.plot(x_arr,error_list,color='red')
+    # plt.plot([0,x_arr[-1]],[0,0],color='black')
+
+    # 路线绘图
+    # plt.plot(path_x,path_y)
+    # plt.plot(pose_list_x,pose_list_y)
+
+    plt.show()
+
+
+    print('error is ',t1_error)
+
+    env.end()
+    return t1_error,iter_times
 
 
 def main():

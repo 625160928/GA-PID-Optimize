@@ -4,11 +4,13 @@ import numpy as np
 import random
 import yaml
 from robot_world import test_pid_parameter
+from sklearn.gaussian_process.kernels import RBF
+from sklearn.gaussian_process import GaussianProcessClassifier
 
 NGEN = 50 # Number of Generation
 MU = 100 # Number of individual in population
 CXPB = 0.8 #Crossover probability
-NDIM = 3 # Number of dimension of the individual (=number of gene)
+NDIM = 24 # Number of dimension of the individual (=number of gene)
 with open('car_world.yaml') as f:
     PARM = yaml.safe_load(f)
 lock = multiprocessing.Lock()
@@ -17,7 +19,9 @@ lock = multiprocessing.Lock()
 LOW1, UP1 = 0 , 4
 LOW2, UP2 = 0 , 1
 
-BOUNDS = [(LOW1, UP1)]+[(LOW2, UP2) for i in range(NDIM-1)]
+BOUNDS = [(LOW2, UP2) for i in range(NDIM)]
+for i in range(8):
+    BOUNDS[i*3] = (LOW1,UP1)
 
 
 toolbox = base.Toolbox()
@@ -44,7 +48,12 @@ def init_ind(icls, ranges):
 def evaluation(ind):
     # lock.acquire()
     # try:
-    objective1,objective2 = test_pid_parameter(param = ind,parm = PARM)
+    models = []
+    X = np.range(0.5,4,1)
+    kernel = 1.0 * RBF(1.0)
+    for i in range(6):
+        pass
+    objective1,objective2 = test_pid_parameter(models=models)
     # finally:
     #     lock.release()
     
@@ -112,4 +121,4 @@ if __name__ == "__main__":
     # Saving the Pareto Front, for further exploitation
     with open('./pareto_front.txt', 'w') as front:
         for ind in optimal_front:
-            front.write(str(ind.fitness) + '\n')
+            front.write(str(ind) + '\n')
