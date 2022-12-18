@@ -11,11 +11,7 @@ from ir_sim2.controller_method.pid_lateral_controller import PIDLateralControlle
 from ir_sim2.controller_method.pid_lateral_controller_angle import PIDLateralAngleController
 
 
-<<<<<<< HEAD
-def env1_test(env, dis_controller,ang_controller, route, max_iter=3000, speed=1, end_dist=1.0, show_cartoon=False,rbf_model=None):
-=======
-def env1_test(env, dis_controller,ang_controller, route, max_iter=3000, speed=1, end_dist=1.0, show_cartoon=False,use_route_speed=False):
->>>>>>> 7d2c9f2a808be98aaea8b086fe3a3892096e4de1
+def env1_test(env, dis_controller,ang_controller, route, max_iter=3000, speed=1, end_dist=1.0, show_cartoon=False,rbf_model=None,use_route_speed=False):
     steer_limit=45/180*math.pi
     total_error=0
     pose_list=[]
@@ -162,11 +158,11 @@ def test_pid_parameter(model):
     goal_dist=1
 
     #pid的参数
-    dis_K_P = 0.02
+    dis_K_P = 0.3
     dis_K_D = 0.05
     dis_K_I = 0
 
-    ang_K_P = 0.2
+    ang_K_P = 0.1
     ang_K_D = 0.05
     ang_K_I = 0
 
@@ -174,12 +170,17 @@ def test_pid_parameter(model):
     car_speed=4
 
     #获取需要跟踪的路径
-    path_x,path_y,path_theta_r=get_route1([0,20,0],[40,20,0])
-    path=change_path_type1(path_x,path_y,path_theta_r)
+    # path_x,path_y,path_theta_r=get_route1([0,20,0],[40,20,0])
+    # path_x,path_y,path_theta_r,path_v=get_route_s([0,20,0],[40,20,0],speed=1)
+    # path_x,path_y,path_theta_r,path_v=get_route_circle([20,20],15,speed=1)
+    path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=0.5)
+
+    path=change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v)
 
     #设置车辆起点终点
-    start_point=path[0]
-    end_point=path[-1]
+    start_point=path[0][0:3]
+    end_point=path[-1][0:3]
+    # print('===============',start_point,end_point)
 
     #加载设置文件参数
     f = open(config_file, 'r', encoding='utf-8')
@@ -203,7 +204,7 @@ def test_pid_parameter(model):
 
     start_time=time.time()
     #仿真训练
-    t1_error,pose_list,iter_times=env1_test(env,pid_distance_controller, pid_angle_controller,route=path,speed=car_speed,end_dist=goal_dist,show_cartoon=show_process,rbf_model=model)
+    t1_error,pose_list=env1_test(env,pid_distance_controller, pid_angle_controller,route=path,speed=car_speed,end_dist=goal_dist,show_cartoon=show_process)
 
     end_time=time.time()
     print('cost time ',end_time-start_time,'s')
@@ -261,7 +262,7 @@ def main():
     # path_x,path_y,path_theta_r=get_route1([0,20,0],[40,20,0])
     # path_x,path_y,path_theta_r,path_v=get_route_s([0,20,0],[40,20,0],speed=1)
     # path_x,path_y,path_theta_r,path_v=get_route_circle([20,20],15,speed=1)
-    path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=1)
+    path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=0.5)
 
     path=change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v)
 
@@ -292,8 +293,7 @@ def main():
 
     start_time=time.time()
     #仿真训练
-    t1_error,pose_list=env1_test(env,pid_distance_controller, pid_angle_controller,route=path,speed=car_speed
-                                 ,end_dist=goal_dist,show_cartoon=show_process,use_route_speed=True)
+    t1_error,pose_list=env1_test(env,pid_distance_controller, pid_angle_controller,route=path,speed=car_speed,end_dist=goal_dist,show_cartoon=show_process)
 
     end_time=time.time()
     print('cost time ',end_time-start_time,'s')
