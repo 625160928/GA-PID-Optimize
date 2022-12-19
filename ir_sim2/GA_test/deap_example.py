@@ -6,7 +6,7 @@ import yaml
 from robot_world import test_pid_parameter
 from sklearn.kernel_ridge import KernelRidge
 
-NGEN = 100 # Number of Generation
+NGEN = 1000 # Number of Generation
 MU = 100 # Number of individual in population
 CXPB = 0.8 #Crossover probability
 NDIM = 24 # Number of dimension of the individual (=number of gene)

@@ -30,7 +30,7 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, 
         if rbf_model!=None :
             # parm=rbf_model.predict(np.asarray(car_speed).reshape(-1,1)).reshape(-1)
             parm=rbf_model.get_parm(car_speed)
-            # print(parm)
+            print(parm)
             dis_controller.set_parm(p = parm[0], i = parm[1], d = parm[2])
             ang_controller.set_parm(p = parm[3], i = parm[4], d = parm[5])
         
@@ -211,7 +211,7 @@ def test_pid_parameter(model):
     t1_error,pose_list,iter_times=env1_test(env,pid_distance_controller, pid_angle_controller,route=path,speed=car_speed,end_dist=goal_dist,show_cartoon=show_process,rbf_model=model,use_route_speed=True)
 
     end_time=time.time()
-    print('cost time ',end_time-start_time,'s')
+    # print('cost time ',end_time-start_time,'s')
 
     pose_list_x,pose_list_y,pose_list_theta_r=change_path_type3(pose_list)
     #分析数据
@@ -231,7 +231,7 @@ def test_pid_parameter(model):
     # plt.show()
 
 
-    print('error is ',t1_error)
+    # print('error is ',t1_error)
 
     env.end()
     return t1_error,iter_times
@@ -245,8 +245,8 @@ def test_model_in_all_env(model):
     #每步的时间
     dt=0.1
     #是否显示动画
-    show_process=False
-    # show_process=True
+    # show_process=False
+    show_process=True
     # 离终点多近算结束
     goal_dist=1
 
@@ -260,19 +260,19 @@ def test_model_in_all_env(model):
     ang_K_I = 0
 
     #设置车辆的移动速度
-    car_speed=4
+    car_speed=1.4
 
     path_arr=[]
 
     #获取需要跟踪的路径
-    path_x,path_y,path_theta_r,path_v=get_route_dir([0,20,0],[40,20,0],speed=car_speed)
-    path_arr.append(change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v))
-
-    path_x,path_y,path_theta_r,path_v=get_route_s([0,20,0],[40,20,0],speed=car_speed)
-    path_arr.append(change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v))
-
-    path_x,path_y,path_theta_r,path_v=get_route_circle([20,20],15,speed=car_speed)
-    path_arr.append(change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v))
+    # path_x,path_y,path_theta_r,path_v=get_route_dir([0,20,0],[40,20,0],speed=car_speed)
+    # path_arr.append(change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v))
+    #
+    # path_x,path_y,path_theta_r,path_v=get_route_s([0,20,0],[40,20,0],speed=car_speed)
+    # path_arr.append(change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v))
+    #
+    # path_x,path_y,path_theta_r,path_v=get_route_circle([20,20],15,speed=car_speed)
+    # path_arr.append(change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v))
 
     path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=car_speed)
     path_arr.append(change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v))
@@ -299,8 +299,8 @@ def test_model_in_all_env(model):
             file.write(yaml.dump(parm, allow_unicode=True))
 
         #设置仿真环境
-        env = EnvBase(config_file)
-        env.plot=show_process
+        env = EnvBase(config_file,plot=show_process)
+        # env.plot=show_process
 
         #设置pid控制器
         pid_distance_controller=PIDLateralController(L,dt,car_steer_limit,dis_K_P,dis_K_D,dis_K_I)
@@ -310,7 +310,7 @@ def test_model_in_all_env(model):
         # print(model==None)
         #仿真训练
         t1_error,pose_list,iter_times=env1_test(env,pid_distance_controller, pid_angle_controller,route=path,
-                                                speed=car_speed,end_dist=goal_dist,show_cartoon=show_process,rbf_model=model,use_route_speed=True)
+                                                speed=car_speed,end_dist=goal_dist,show_cartoon=show_process,rbf_model=model,use_route_speed=False)
 
         end_time=time.time()
         env.end()
@@ -401,8 +401,8 @@ def main():
     # 路线绘图
     # plt.plot(path_x,path_y)
     # plt.plot(pose_list_x,pose_list_y)
-
-    plt.show()
+    if show_process:
+        plt.show()
 
 
     print('error is ',t1_error)
@@ -414,15 +414,34 @@ def test_rbf_parm_pid():
     from ir_sim2.GA_test.rbf_pid import RbfPid
     v_arr=[]
     parm_arr=[]
-    v_arr.append([4])
-    parm_arr.append([0.2,0.05,0,0.0,0.00,0])
-    v_arr.append([2])
-    parm_arr.append([0.2,0.05,0,0.2,0.05,0])
-    v_arr.append([1])
-    parm_arr.append([0.5,0.05,0,0.3,0.05,0])
-    # print(v_arr)
-    # print(parm_arr)
-    model=RbfPid(v_arr,parm_arr)
+    v_arr.append([0.2])
+    parm_arr.append([6.631179399694174, 1.2519445714834974, 1.8202757779972165, 0.015133312965817103, 0.45177386351235305, 0.12510221029362378])
+    v_arr.append([0.6])
+    parm_arr.append([11.619609618311, 4.4225134285476475, 0.18103029135498205, 0.6716269595558078, 0.6309650005210373, 0.1932678508697221])
+    v_arr.append([1.0])
+    parm_arr.append([10.848542963745997, 0.4866148658867582, 0.198933858287078, 1.3194756050149214, 0.5898385353992489, 0.9955664753478234])
+    v_arr.append([1.4])
+    parm_arr.append([1.6117808510413938, 0.12202209424231114, 1.136392217364974, 0.40138068892082046, 1.2516250426094335, 1.4335769466315929])
+    v_arr.append([1.8])
+    parm_arr.append([0.8148088699150735, 1.9400366705910956, 1.6058691342502738, 0.5840434745717826, 1.9662391441900615, 2.89045910555941])
+    v_arr.append([ 2.2   ])
+    parm_arr.append([  9.69583037510899, 1.223886994720352, 0.6234256284619624, 1.3774660611241316, 1.624064303963203, 1.442778174326632  ])
+    v_arr.append([ 2.6   ])
+    parm_arr.append([ 0.42281825265616524, 1.1632779822819121, 1.717776686565698, 2.3413898157105995, 0.11518691464205888, 2.2064311690989538  ])
+    v_arr.append([ 3.0   ])
+    parm_arr.append([ 11.35601775334114, 2.461330496856098, 0.24621840438688603, 1.4327270239820475, 0.04757623969233293, 0.7257789003586954  ])
+    v_arr.append([ 3.4   ])
+    parm_arr.append([11.503980074940594, 0.8349539383719892, 0.15481947654693873, 1.5656267221851938, 0.03706243171762191, 0.9619398100703707  ])
+    v_arr.append([ 3.8   ])
+    parm_arr.append([ 15.551359942151784, 2.6964727487000744, 0.2958757511436185, 0.912639941984511, 1.3889910687413245, 0.5374831522290826 ])
+
+    parmnp_arr = []
+    for i in parm_arr:
+        parmnp_arr.append(np.array(i))
+    # for i in range(len(v_arr)):
+    #     print(v_arr[i],type(v_arr[i][0]))
+    #     print(parm_arr[i],type(parm_arr[i][0]))
+    model=RbfPid(v_arr,parmnp_arr)
 
 
     test_model_in_all_env(model)

@@ -4,6 +4,8 @@ class RBFmodel():
     def __init__(self,x,y,core='gaussian',parm=[1]):
         self.__data=np.array(x)
         self.__label=np.array(y)
+        # print()
+        # print(self.__data.shape,self.__label.shape)
         self.__core=core
         self.__parm=parm
         self.__table=np.zeros([len(self.__data), len(self.__data)])
@@ -32,8 +34,9 @@ class RBFmodel():
     def cal_labuda(self,use_search=False):
         if use_search==False:
             re_core=np.linalg.inv(self.__core_table)
-
-            # print(self.__label.shape,re_core.shape)
+            # print(re_core)
+            # print(self.__label)
+            # print(self.__label.shape,re_core.shape,type(self.__label),type(re_core))
             self.__labuda=  re_core @ self.__label
             # for i in range(len(self.__labuda)):
             #     for j in range(len(self.__labuda)):

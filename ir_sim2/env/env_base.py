@@ -22,7 +22,7 @@ class EnvBase:
     robot_factory={'robot_diff': RobotDiff, 'robot_acker': RobotAcker, 'robot_omni': RobotOmni}
     obstacle_factory = {'obstacle_circle': ObstacleCircle, 'obstacle_block': ObstacleBlock, 'obstacle_polygon': ObstaclePolygon}
 
-    def __init__(self, world_name=None, control_mode='auto', obstacle_args_list=[], plot=True, save_ani=False, full=False, custom_robot=None, **kwargs) -> None:
+    def __init__(self, world_name=None, control_mode='auto', obstacle_args_list=[], plot=False, save_ani=False, full=False, custom_robot=None, **kwargs) -> None:
         
         '''
         The main environment class for this simulator
@@ -488,7 +488,7 @@ class EnvBase:
         # fig_args: arguments when saving the figures for animation, see https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.savefig.html for detail
         # ani_args: arguments for animations(gif): see https://imageio.readthedocs.io/en/v2.8.0/format_gif-pil.html#gif-pil for detail
 
-        print('DONE')
+        # print('DONE')
 
         if self.save_ani: self.save_animate(ani_name, suffix, keep_len, rm_fig_path, **ani_args)
  
