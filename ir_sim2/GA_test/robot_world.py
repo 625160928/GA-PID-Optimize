@@ -11,7 +11,8 @@ from ir_sim2.controller_method.pid_lateral_controller import PIDLateralControlle
 from ir_sim2.controller_method.pid_lateral_controller_angle import PIDLateralAngleController
 
 
-def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, end_dist=1.0, show_cartoon=False,rbf_model=None,use_route_speed=False):
+def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, end_dist=1.0,
+              show_cartoon=False,rbf_model=None,use_route_speed=False,break_dis=10):
     steer_limit=45/180*math.pi
     total_error=0
     pose_list=[]
@@ -45,6 +46,9 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, 
         #计算误差
         now_error=shortest_dis
         total_error+=now_error
+
+        if shortest_dis>break_dis:
+            return total_error+1000,pose_list,max_iter*2-i
 
 
 
