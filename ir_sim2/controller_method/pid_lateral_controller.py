@@ -5,7 +5,20 @@ class Point():
     def __init__(self):
         self.x=0
         self.y=0
-
+def angle_between(p1, p2):
+    ang1 = np.arctan2(*p1[::-1])
+    ang2 = np.arctan2(*p2[::-1])
+    return ((ang1 - ang2) % (2 * np.pi))
+def rotation(vector, theta):
+    v1_new = (vector[0] * np.cos(theta)) - (vector[1] * np.sin(theta))
+    v2_new = (vector[1] * np.cos(theta)) + (vector[0] * np.sin(theta))
+    z_trans = [v1_new, v2_new, vector[2]]
+    line_yz = [0., 1.]
+    theta2 = angle_between(line_yz, [z_trans[1], z_trans[2]])
+    v1_new = (z_trans[0] * np.cos(theta2)) - (z_trans[1] * np.sin(theta2))
+    v2_new = (z_trans[1] * np.cos(theta2)) + (z_trans[0] * np.sin(theta2))
+    y_trans = np.array([z_trans[0], v1_new, v2_new])
+    return z_trans, y_trans
 class PIDLateralController(object):  # pylint: disable=too-few-public-methods
     """
     PIDLateralController implements lateral control using a PID.
@@ -73,7 +86,7 @@ class PIDLateralController(object):  # pylint: disable=too-few-public-methods
 
         return ind
 
-    def run_step(self, current_pose_x,current_pose_y,current_pose_theta, waypoint_x,waypoint_y):
+    def run_step(self, current_pose_x,current_pose_y,current_pose_theta, waypoint_x,waypoint_y,waypoint_theta):
         """
         Estimate the steering angle of the vehicle based on the PID equations
 
@@ -81,34 +94,52 @@ class PIDLateralController(object):  # pylint: disable=too-few-public-methods
         :param current_pose: current pose of the vehicle
         :return: steering control in the range [-1, 1]
         """
-        v_begin_x = current_pose_x
-        v_begin_y = current_pose_y
-        yaw=current_pose_theta
+        # v_begin_x = current_pose_x
+        # v_begin_y = current_pose_y
+        # yaw=current_pose_theta
+        #
+        # v_vec = np.array([math.cos(yaw), math.sin(yaw), 0.0])
+        # w_vec = np.array([waypoint_x -
+        #                   v_begin_x, waypoint_y -
+        #                   v_begin_y, 0.0])
+        # if np.dot(w_vec, v_vec)==0 or np.linalg.norm(w_vec)==0 or np.linalg.norm(v_vec)==0:
+        #     tmp_dot=0
+        # else:
+        #     tmp_dot=np.dot(w_vec, v_vec) /(np.linalg.norm(w_vec) * np.linalg.norm(v_vec))
+        # _dot = math.acos(np.clip(tmp_dot, -1.0, 1.0))
+        #
+        # _cross = np.cross(v_vec, w_vec)
+        # if _cross[2] < 0:
+        #     _dot *= -1.0
 
-        v_vec = np.array([math.cos(yaw), math.sin(yaw), 0.0])
-        w_vec = np.array([waypoint_x -
-                          v_begin_x, waypoint_y -
-                          v_begin_y, 0.0])
-        if np.dot(w_vec, v_vec)==0 or np.linalg.norm(w_vec)==0 or np.linalg.norm(v_vec)==0:
-            tmp_dot=0
-        else:
-            tmp_dot=np.dot(w_vec, v_vec) /(np.linalg.norm(w_vec) * np.linalg.norm(v_vec))
-        _dot = math.acos(np.clip(tmp_dot, -1.0, 1.0))
+        dx=current_pose_x-waypoint_x
+        dy=current_pose_y-waypoint_y
+        cos_target_heading=math.cos(waypoint_theta)
+        sin_target_heading=math.sin(waypoint_theta)
+        lateral_error_m = cos_target_heading * dy - sin_target_heading * dx
+        print('====================')
+        print('way point ',current_pose_x,current_pose_y,current_pose_theta*180/math.pi, waypoint_x,waypoint_y,waypoint_theta*180/math.pi)
+        print('dxdy',round(dx,2),round(dy,2),round(waypoint_theta*180/math.pi,1),round(lateral_error_m,2))
+        lateral_error_m *=-1
+        # print('rotation ',rotation([dx,dy,current_pose_theta-waypoint_theta],waypoint_theta) )
+        # print(tmp_dot,np.clip(tmp_dot, -1.0, 1.0),_dot,lateral_error_m)
 
-        _cross = np.cross(v_vec, w_vec)
-        if _cross[2] < 0:
-            _dot *= -1.0
+        # srx = (dx) * math.cos(waypoint_theta) + (dy) * math.sin(waypoint_theta)
+        # sry = (dy) * math.cos(waypoint_theta) - (dx) * math.sin(waypoint_theta)
+        # print(180*waypoint_theta/math.pi,'src sry ',srx,sry,lateral_error_m)
 
+        # print(lateral_error_m)
         previous_error = self.error
 
-        self.error = _dot
+        # self.error = _dot
+        self.error = lateral_error_m
         # restrict integral term to avoid integral windup
         self.error_integral = np.clip(self.error_integral + self.error, -400.0, 400.0)
         self.error_derivative = self.error - previous_error
 
         output = self._K_P * self.error + self._K_I * self.error_integral + self._K_D * self.error_derivative
-        # print('output ',output)
-        #会返回一个范围从-1到1的数值
+        # print('dis output  ', np.clip(output, -1.0, 1.0)*self.__car_steer_limit*180/math.pi,self.error)
+        # 会返回一个范围从-1到1的数值
         return np.clip(output, -1.0, 1.0)*self.__car_steer_limit
 
     #x, y, theta 车辆位置

@@ -17,6 +17,7 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, 
     total_error=0
     pose_list=[]
     route_x,route_y,route_theta_r=change_path_type3(route)
+    old_ind=0
     for i in range(max_iter):
         #获取车辆当前位置
         car_state=env.robot_list[0].state
@@ -41,6 +42,11 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, 
 
         #计算车离路径的最近距离
         ind,shortest_dis = get_shortest_point(car_position_x,car_position_y,path=route)
+        if ind<old_ind:
+            ind=old_ind
+        else:
+            old_ind=ind
+
         # print(car_position_x,car_position_y,car_position_theta_r*180/math.pi,ind,shortest_dis)
 
         #计算误差
@@ -54,12 +60,12 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, 
 
         #计算控制
         steer_control_dis=dis_controller.run_step(car_position_x, car_position_y, car_position_theta_r,
-                                              route[ind][0], route[ind][1])
+                                              route[ind][0], route[ind][1], route[ind][2])
         steer_control_ang=-ang_controller.run_step(car_position_x, car_position_y, car_position_theta_r,
                                               route[ind][0], route[ind][1], route[ind][2],car_speed)
         # print('=============')
         # print('dist ',steer_control_dis*180/math.pi,'  angle ',steer_control_ang*180/math.pi)
-
+        # steer_control_dis=0
         steer_control=np.clip(steer_control_dis+steer_control_ang,-steer_limit,steer_limit)
 
         # print('control ',steer_control,steer_control_dis,steer_control_ang)
@@ -340,16 +346,23 @@ def main():
     goal_dist=1
 
     #pid的参数
-    dis_K_P = 0.3
-    dis_K_D = 0.05
-    dis_K_I = 0
+    #0.5764250986766484, 1.879224972658214, 0.8307444833606002, 4.384537513353423, 0.895612962471191, 0.27693529780814263
+    dis_K_P = 1
+    dis_K_D =  0.2
+    dis_K_I = 0.0
+    # dis_K_P = 0
+    # dis_K_D =  0
+    # dis_K_I = 0
 
-    ang_K_P = 0.1
-    ang_K_D = 0.05
+    # ang_K_P =4.384537513353423
+    # ang_K_D = 0.895612962471191
+    # ang_K_I = 0.27693529780814263
+    ang_K_P = 0
+    ang_K_D = 0
     ang_K_I = 0
 
     #设置车辆的移动速度
-    car_speed=4
+    car_speed=3
 
     #获取需要跟踪的路径
     # path_x,path_y,path_theta_r=get_route1([0,20,0],[40,20,0])
@@ -377,8 +390,7 @@ def main():
         file.write(yaml.dump(parm, allow_unicode=True))
 
     #设置仿真环境
-    env = EnvBase(config_file)
-    env.plot=show_process
+    env = EnvBase(config_file,plot=show_process)
 
     #设置pid控制器
     pid_distance_controller=PIDLateralController(L,dt,car_steer_limit,dis_K_P,dis_K_D,dis_K_I)
@@ -386,7 +398,8 @@ def main():
 
     start_time=time.time()
     #仿真训练
-    t1_error,pose_list,iter_times=env1_test(env,pid_distance_controller, pid_angle_controller,route=path,speed=car_speed,end_dist=goal_dist,show_cartoon=show_process,use_route_speed=True)
+    t1_error,pose_list,iter_times=env1_test(env,pid_distance_controller, pid_angle_controller,
+                                            route=path,speed=car_speed,end_dist=goal_dist,show_cartoon=show_process,use_route_speed=False)
 
     end_time=time.time()
     print('cost time ',end_time-start_time,'s')
@@ -451,5 +464,5 @@ def test_rbf_parm_pid():
     test_model_in_all_env(model)
 
 if __name__=="__main__":
-    test_rbf_parm_pid()
-    
+    # test_rbf_parm_pid()
+    main()

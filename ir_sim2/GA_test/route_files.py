@@ -109,7 +109,7 @@ def get_route_U(dis,center,radiu,step=0.1,speed=4):
     for i in range(numb):
         x=center[0]+math.cos((numb-i)*theta_r_t)*radiu
         y=center[1]+math.sin((numb-i)*theta_r_t)*radiu
-        theta=(numb-i)*theta_r_t+math.pi/2
+        theta=math.pi/2-(i)*theta_r_t
         v=speed/2
         x_arr.append(x)
         y_arr.append(y)
@@ -191,3 +191,9 @@ def get_route_dir(start_point,end_point,step=0.1,speed=1):
         theta_arr.append(theta_r)
         v_arr.append(speed)
     return x_arr,y_arr,theta_arr,v_arr
+
+
+if __name__=="__main__":
+    path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=4)
+    for i in range(len(path_v)):
+        print(path_x[i],path_y[i],path_theta_r[i]*180/math.pi)
