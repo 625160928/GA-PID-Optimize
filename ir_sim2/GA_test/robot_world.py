@@ -58,18 +58,20 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, 
             return total_error+10000,pose_list,max_iter*2-i
 
 
-        print('======================')
+        # print('======================')
+        # print('pose ',round(car_position_x,2), round(car_position_y,2), round(car_position_theta_r*180/math.pi,2),
+        #                                       round(route[ind][0],2), round(route[ind][1],2), round(route[ind][2]*180/math.pi),2)
         #计算控制
         steer_control_dis=dis_controller.run_step(car_position_x, car_position_y, car_position_theta_r,
                                               route[ind][0], route[ind][1], route[ind][2])
-        steer_control_ang=-ang_controller.run_step(car_position_x, car_position_y, car_position_theta_r,
+        steer_control_ang=ang_controller.run_step(car_position_x, car_position_y, car_position_theta_r,
                                               route[ind][0], route[ind][1], route[ind][2],car_speed)
-        # print('=============')
+        # print('------')
         # print('dist ',steer_control_dis*180/math.pi,'  angle ',steer_control_ang*180/math.pi)
         # steer_control_dis=0
         steer_control=np.clip(steer_control_dis+steer_control_ang,-steer_limit,steer_limit)
 
-        print('control dis',round(steer_control_dis*180/math.pi,2),' ang ',round(steer_control_ang*180/math.pi,2),' ans ',round(steer_control*180/math.pi,2))
+        # print('control dis',round(steer_control_dis*180/math.pi,2),' ang ',round(steer_control_ang*180/math.pi,2),' ans ',round(steer_control*180/math.pi,2))
         if use_route_speed==True:
             car_control=[[[route[ind][3]],[steer_control]]]
         else:
@@ -286,12 +288,12 @@ def test_model_in_all_env(model,control=2,speed=1.4,show_pro=False,USE_ROUTE_SPE
     elif control==2:
         #pid的参数
         dis_K_P =model[0]
-        dis_K_D = model[1]
-        dis_K_I = model[2]
+        dis_K_I = model[1]
+        dis_K_D = model[2]
 
         ang_K_P = model[3]
-        ang_K_D = model[4]
-        ang_K_I = model[5]
+        ang_K_I = model[4]
+        ang_K_D = model[5]
     elif control==3:
         parm = model.get_parm(speed)
         #pid的参数
@@ -517,7 +519,7 @@ if __name__=="__main__":
     # test_rbf_parm_pid()
     # main()
 
-    parm=  [1.95551362, 0.90495841 ,0.11547145, 1.99839368 ,0.25714239 ,0.33708934]
+    parm=  [1.95551362, 0.09495841 ,0.11547145, 1.99839368 ,0.025714239 ,0.33708934]
     test_model_in_all_env(parm,control=2,speed=1.2,show_pro=True)
 
     # parm=[4.651003054834362, 9.79874428915708, 0.00259476557363314]

@@ -45,7 +45,7 @@ class PIDLateralController(object):  # pylint: disable=too-few-public-methods
         self.__pure_pursuit_Lfc = 2  # 前视距离
         self.__pure_pursuit_min_r = 0.25
         self.__dt=dt
-        self.max_i=40
+        self.max_i=10
 
         #  限制车轮转角
         self.__car_steer_limit = car_steer_limit
@@ -103,10 +103,10 @@ class PIDLateralController(object):  # pylint: disable=too-few-public-methods
         self.error_integral = np.clip(self.error_integral + self.error, -1*self.max_i, self.max_i)
         self.error_derivative = self.error - previous_error
 
-        print('dis error ',self.error,self.error_integral)
         output = self._K_P * self.error + self._K_I * self.error_integral + self._K_D * self.error_derivative
         # print('dis output  ', np.clip(output, -1.0, 1.0)*self.__car_steer_limit*180/math.pi,self.error)
         # 会返回一个范围从-1到1的数值
+        # print('error dis p',self.error,' i ',self.error_integral,' d ',self.error_derivative ,np.clip(output, -1.0, 1.0) )
         return np.clip(output, -1.0, 1.0)*self.__car_steer_limit
 
     #x, y, theta 车辆位置

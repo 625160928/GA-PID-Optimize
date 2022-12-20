@@ -21,13 +21,19 @@
         <item name="GROUP_NODE:upstream" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </expand>
-    <select />
+    <select>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:origin/main" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </select>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e4266ef-6d81-4bb8-bf74-10dc4dc8b86e" name="Default Changelist" comment="修改了原先u型路径的角度不对劲的问题，修改了横向距离的计算方式，新的横向距离更容易理解了">
-      <change beforePath="$PROJECT_DIR$/ir_sim2/GA_test/car_world.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ir_sim2/GA_test/car_world.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ir_sim2/GA_test/robot_world.py" beforeDir="false" afterPath="$PROJECT_DIR$/ir_sim2/GA_test/robot_world.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ir_sim2/GA_test/route_files.py" beforeDir="false" afterPath="$PROJECT_DIR$/ir_sim2/GA_test/route_files.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ir_sim2/controller_method/pid_lateral_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/ir_sim2/controller_method/pid_lateral_controller.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ir_sim2/controller_method/pid_lateral_controller_angle.py" beforeDir="false" afterPath="$PROJECT_DIR$/ir_sim2/controller_method/pid_lateral_controller_angle.py" afterDir="false" />
     </list>
@@ -56,7 +62,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../高级人工智能/project" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -288,7 +294,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -315,46 +333,54 @@
     </state>
     <state x="-1180" y="275" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1670155884959" />
     <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671545833873" />
-    <state width="1899" height="348" key="GridCell.Tab.0.bottom" timestamp="1671545835158">
+    <state width="1899" height="391" key="GridCell.Tab.0.bottom" timestamp="1671551956472">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="308" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1671543737560" />
-    <state width="1899" height="348" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671545835158" />
-    <state width="1899" height="348" key="GridCell.Tab.0.center" timestamp="1671545835158">
+    <state width="1899" height="391" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671551956472" />
+    <state width="1899" height="391" key="GridCell.Tab.0.center" timestamp="1671551956472">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="308" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1671543737560" />
-    <state width="1899" height="348" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671545835158" />
-    <state width="1899" height="348" key="GridCell.Tab.0.left" timestamp="1671545835158">
+    <state width="1899" height="391" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671551956472" />
+    <state width="1899" height="391" key="GridCell.Tab.0.left" timestamp="1671551956472">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="308" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1671543737560" />
-    <state width="1899" height="348" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671545835158" />
-    <state width="1899" height="348" key="GridCell.Tab.0.right" timestamp="1671545835158">
+    <state width="1899" height="391" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671551956472" />
+    <state width="1899" height="391" key="GridCell.Tab.0.right" timestamp="1671551956472">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="308" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1671543737560" />
-    <state width="1899" height="348" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671545835158" />
-    <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1671545835158">
+    <state width="1899" height="391" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671551956472" />
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1671550630883">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1671543327253" />
-    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671545835158" />
-    <state width="1899" height="348" key="GridCell.Tab.1.center" timestamp="1671545835158">
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671550630883" />
+    <state width="1899" height="348" key="GridCell.Tab.1.center" timestamp="1671550630883">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1671543327253" />
-    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671545835158" />
-    <state width="1899" height="348" key="GridCell.Tab.1.left" timestamp="1671545835158">
+    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671550630883" />
+    <state width="1899" height="348" key="GridCell.Tab.1.left" timestamp="1671550630883">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1671543327253" />
-    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671545835158" />
-    <state width="1899" height="348" key="GridCell.Tab.1.right" timestamp="1671545835158">
+    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671550630883" />
+    <state width="1899" height="348" key="GridCell.Tab.1.right" timestamp="1671550630883">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1671543327253" />
-    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671545835158" />
+    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671550630883" />
+    <state x="184" y="86" key="MergeDialog" timestamp="1671551935914">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="184" y="86" key="MergeDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671551935914" />
+    <state x="595" y="280" key="MultipleFileMergeDialog" timestamp="1671551952060">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="595" y="280" key="MultipleFileMergeDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671551952060" />
     <state x="668" y="243" key="SettingsEditor" timestamp="1671377338751">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -369,6 +395,10 @@
     </state>
     <state x="-1157" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1670927987634" />
     <state x="763" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671428791109" />
+    <state x="728" y="232" key="git4idea.branch.GitSmartOperationDialog" timestamp="1671551420612">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="728" y="232" key="git4idea.branch.GitSmartOperationDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671551420612" />
     <state x="800" y="304" key="refactoring.ChangeSignatureDialog" timestamp="1670939389949">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -377,5 +407,16 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671351618497" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ir_sim2/GA_test/robot_world.py</url>
+          <line>100</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
