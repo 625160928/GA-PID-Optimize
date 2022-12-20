@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
-from pathlib import Path, PurePath
+from pathlib import Path
 from pynput import keyboard
 from math import sin, cos, pi
 from .env_robot import EnvRobot
@@ -22,7 +22,7 @@ class EnvBase:
     robot_factory={'robot_diff': RobotDiff, 'robot_acker': RobotAcker, 'robot_omni': RobotOmni}
     obstacle_factory = {'obstacle_circle': ObstacleCircle, 'obstacle_block': ObstacleBlock, 'obstacle_polygon': ObstaclePolygon}
 
-    def __init__(self, world_name=None, control_mode='auto', obstacle_args_list=[], plot=True, display=True, save_ani=False, full=False, custom_robot=None, **kwargs) -> None:
+    def __init__(self, world_name=None, control_mode='auto', obstacle_args_list=[], plot=False, save_ani=False, full=False, custom_robot=None, **kwargs) -> None:
         
         '''
         The main environment class for this simulator
@@ -36,11 +36,17 @@ class EnvBase:
         '''
 
         # arguments
-        world_args, robot_args, keyboard_args, init_args = dict(), dict(), dict(), dict()
+        world_args, robot_args, keyboard_args = dict(), dict(), dict()
         
-        # path and file configuration
-        world_file_path = EnvBase.file_check(world_name)
-
+        if os.path.exists(world_name):
+            world_file_path = world_name
+        elif os.path.exists(sys.path[0] + '/' + world_name):
+            world_file_path = sys.path[0] + '/' + world_name
+        elif os.path.exists(os.getcwd() + '/' + world_name):
+            world_file_path = os.getcwd() + '/' + world_name
+        else:
+            print('Warning: No World File Found')
+            world_file_path = None
 
         if world_file_path != None:
            
@@ -55,7 +61,6 @@ class EnvBase:
         robot_args.update(kwargs.get('robot_args', dict()))
         keyboard_args.update(kwargs.get('keyboard_args', dict()))
         [obstacle_args.update(kwargs.get('obstacle_args', dict())) for obstacle_args in obstacle_args_list]
-        init_args.update(kwargs.get('world_args', dict()))
 
         # world arguments
         self.world = world(**world_args)
@@ -70,31 +75,20 @@ class EnvBase:
 
         # plot
         self.plot = plot
-        self.display = display
         self.dyna_line_list = []
         self.dyna_patch_list = []
 
         # keyboard control
         self.control_mode = control_mode
 
-        # animation arguments:
-        self.save_ani = save_ani  
-        self.ani_dpi = kwargs.get('ani_dpi', 300)
-        self.fig_dpi = kwargs.get('fig_dpi', 600)
-        self.bbox_inches = kwargs.get('bbox_inches', 'tight') 
-
-        # configure path
-        root_path = kwargs.get('root_path', Path(sys.path[0]))
-        image_path = kwargs.get('image_path', Path(sys.path[0] + '/' + 'image'))
-        ani_path = kwargs.get('ani_path', Path(sys.path[0] + '/' + 'animation'))
-
-        self.root_path = EnvBase.path_to_pure(root_path)
-        self.image_path = EnvBase.path_to_pure(image_path)
-        self.ani_path = EnvBase.path_to_pure(ani_path)
-        
         # initialize the environment
-        self._init_environment(**init_args)
+        self._init_environment(**kwargs)
 
+        # animation
+        self.save_ani = save_ani  
+        self.image_path = Path(sys.path[0] + '/' + 'image')  
+        self.ani_path = Path(sys.path[0] + '/' + 'animation')
+        
         if control_mode == 'keyboard':
             vel_max = self.robot_args.get('vel_max', [2.0, 2.0])
             self.key_lv_max = keyboard_args.get("key_lv_max", vel_max[0])
@@ -136,15 +130,7 @@ class EnvBase:
         # full=False, keep_path=False, 
         # kwargs: 
         #         keep_path, keep a residual
-        # 
-        
-        # default obstacles
-        self.env_obstacle_list = [EnvObstacle(self.obstacle_factory[oa['type']], step_time=self.step_time, **oa) for oa in self.obstacle_args_list]
-        self.obstacle_list = [obs for eol in self.env_obstacle_list for obs in eol.obs_list]
-        
-        env_global.obstacle_list = self.obstacle_list
-
-        # default robots
+        #     
         robot_type = self.robot_args.get('type', 'robot_diff')  
 
         if robot_type == 'robot_custom':
@@ -152,15 +138,19 @@ class EnvBase:
         else:
             self.env_robot = EnvRobot(self.robot_factory[robot_type], step_time=self.step_time, **self.robot_args)
         
+        self.env_obstacle_list = [EnvObstacle(self.obstacle_factory[oa['type']], step_time=self.step_time, **oa) for oa in self.obstacle_args_list]
+       
         # default robots 
         self.robot_list = self.env_robot.robot_list
         self.robot = self.robot_list[0] if len(self.robot_list) > 0 else None
         self.robot_number = len(self.robot_list)
-       
+        # default obstacles
+        self.obstacle_list = [obs for eol in self.env_obstacle_list for obs in eol.obs_list]
         self.components = self.robot_list + self.obstacle_list
 
         # global objects through multiple files
         env_global.robot_list = self.robot_list
+        env_global.obstacle_list = self.obstacle_list
         env_global.components = self.components
         env_global.control_mode = self.control_mode
 
@@ -283,17 +273,15 @@ class EnvBase:
     # endregion: reset the environment
 
     # region: environment render
-    def render(self, pause_time=0.05, fig_kwargs=dict(), **kwargs):
+    def render(self, pause_time=0.05, fig_args=dict(), **kwargs):
         # figure_args: arguments when saving the figures for animation, see https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.savefig.html for detail
-        # default figure arguments
-        
+
         if self.plot: 
             if self.world.sampling:
                 self.draw_components(self.ax, mode='dynamic', **kwargs)
-                
-                if self.display: plt.pause(pause_time)
+                plt.pause(pause_time)
 
-                if self.save_ani: self.save_gif_figure(bbox_inches=self.bbox_inches, dpi=self.ani_dpi, **fig_kwargs)
+                if self.save_ani: self.save_gif_figure(**fig_args)
 
                 self.clear_components(self.ax, mode='dynamic', **kwargs)
 
@@ -329,7 +317,7 @@ class EnvBase:
         else:
             logging.error('error input of the draw mode')
 
-    def draw_trajectory(self, traj, traj_type='g-', label='trajectory', show_direction=False, refresh=False, **kwargs):
+    def draw_trajectory(self, traj, style='g-', label='trajectory', show_direction=False, refresh=False, **kwargs):
         # traj: a list of points
         if isinstance(traj, list):
             path_x_list = [p[0, 0] for p in traj]
@@ -339,7 +327,7 @@ class EnvBase:
             path_x_list = [p[0] for p in traj.T]
             path_y_list = [p[1] for p in traj.T]
 
-        line = self.ax.plot(path_x_list, path_y_list, traj_type, label=label, **kwargs)
+        line = self.ax.plot(path_x_list, path_y_list, style, label=label, **kwargs)
 
         if show_direction:
             if isinstance(traj, list):
@@ -393,6 +381,16 @@ class EnvBase:
         elif mode == 'all':
             plt.cla()
 
+    def show(self, save_fig=False, fig_name='fig.png', **kwargs):
+        if self.plot:
+            self.draw_components(self.ax, mode='dynamic', **kwargs)
+            
+            if save_fig: self.fig.savefig(fig_name)
+
+            logging.info('Program Done')
+            plt.show()
+    # endregion: environment render
+
     # region: animation
     def save_gif_figure(self, save_figure_format='png', **kwargs):
 
@@ -403,8 +401,6 @@ class EnvBase:
 
     def save_animate(self, ani_name='animated', suffix='.gif', keep_len=30, rm_fig_path=True, **kwargs):
         
-        print('Start to create animation')
-
         if not self.ani_path.exists(): self.ani_path.mkdir()
             
         images = list(self.image_path.glob('*.png'))
@@ -414,10 +410,10 @@ class EnvBase:
 
             if i == 0: continue
 
-            image_list.append(imageio.imread(str(file_name)))
+            image_list.append(imageio.imread(file_name))
             if i == len(images) - 1:
                 for j in range(keep_len):
-                    image_list.append(imageio.imread(str(file_name)))
+                    image_list.append(imageio.imread(file_name))
 
         imageio.mimsave(str(self.ani_path)+'/'+ ani_name + suffix, image_list, **kwargs)
         print('Create animation successfully')
@@ -487,23 +483,20 @@ class EnvBase:
     # endregion:keyboard control
 
     # region: the end of the environment loop 
-    def end(self, ani_name='animation', save_fig=False, fig_name='fig.png', ending_time = 3, suffix='.gif', keep_len=30, rm_fig_path=True, fig_kwargs=dict(), ani_kwargs=dict(), **kwargs):
+    def end(self, ani_name='animation', save_fig=False, fig_name='fig.png', show=True, ending_time = 3, suffix='.gif', keep_len=30, rm_fig_path=True, fig_args=dict(), ani_args=dict(), **kwargs):
         
-        # fig_kwargs: arguments when saving the figures for animation, see https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.savefig.html for detail
-        # ani_kwargs: arguments for animations(gif): see https://imageio.readthedocs.io/en/v2.8.0/format_gif-pil.html#gif-pil for detail
-        print('DONE')
+        # fig_args: arguments when saving the figures for animation, see https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.savefig.html for detail
+        # ani_args: arguments for animations(gif): see https://imageio.readthedocs.io/en/v2.8.0/format_gif-pil.html#gif-pil for detail
 
-        show = kwargs.get('show', self.display)
-        
+        # print('DONE')
+
+        if self.save_ani: self.save_animate(ani_name, suffix, keep_len, rm_fig_path, **ani_args)
+ 
         if self.plot:
+            self.draw_components(self.ax, mode='dynamic', **kwargs)
+            plt.pause(0.00001)
 
-            if self.save_ani:
-                self.save_animate(ani_name, suffix, keep_len, rm_fig_path, **ani_kwargs)
-
-            if save_fig: 
-                self.draw_components(self.ax, mode='dynamic', **kwargs)
-                if self.display: plt.pause(0.00001)
-                self.fig.savefig(self.root_path / fig_name, bbox_inches=self.bbox_inches, dpi=self.fig_dpi, **fig_kwargs)
+            if save_fig: self.fig.savefig(fig_name, **fig_args)
 
             if show: 
                 plt.show(block=False)
@@ -513,37 +506,8 @@ class EnvBase:
 
     # endregion: the end of the environment loop  
 
-    @staticmethod
-    def path_to_pure(path):
-        # check whether path exist or the type is correct
-        # pathtype: str or pure
-
-        if isinstance(path, PurePath):
-            real_path = path
-        elif isinstance(path, str):
-            real_path = Path(path)
-        else:
-            print('error: wrong path type')
-        
-        return real_path
-
-    @staticmethod
-    def file_check(file_name):
-        # check whether file exist or the type is correct
-
-        if os.path.exists(file_name):
-            abs_file_name = file_name
-        elif os.path.exists(sys.path[0] + '/' + file_name):
-            abs_file_name = sys.path[0] + '/' + file_name
-        elif os.path.exists(os.getcwd() + '/' + file_name):
-            abs_file_name = os.getcwd() + '/' + file_name
-        else:
-            print('Warning: No World File Found')
-            abs_file_name = None
-
-        return abs_file_name
-
-        
+    def off():
+        pass
 
     
 
