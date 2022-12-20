@@ -246,6 +246,94 @@ def test_pid_parameter(model):
     env.end()
     return t1_error,iter_times
 
+def test_spead_pid_parameter(ind,car_speed,show_process=False):
+    #参数文件
+    config_file='car_world.yaml'
+    #车辆转向限制
+    car_steer_limit=45 /180*math.pi
+    #每步的时间
+    dt=0.1
+    #是否显示动画
+    # show_process=False
+    # show_process=True
+    # 离终点多近算结束
+    goal_dist=1
+
+    #pid的参数
+    # dis_K_P = 0.3
+    # dis_K_D = 0.05
+    # dis_K_I = 0
+    #
+    # ang_K_P = 0.1
+    # ang_K_D = 0.05
+    # ang_K_I = 0
+    dis_K_P, dis_K_D, dis_K_I, ang_K_P, ang_K_D, ang_K_I = ind
+
+    #设置车辆的移动速度
+    # car_speed=4
+
+    #获取需要跟踪的路径
+    # path_x,path_y,path_theta_r=get_route1([0,20,0],[40,20,0])
+    # path_x,path_y,path_theta_r,path_v=get_route_s([0,20,0],[40,20,0],speed=1)
+    # path_x,path_y,path_theta_r,path_v=get_route_circle([20,20],15,speed=1)
+    path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=4)
+
+    path=change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v)
+
+    #设置车辆起点终点
+    start_point=path[0][0:3]
+    end_point=path[-1][0:3]
+    # print('===============',start_point,end_point)
+
+    #加载设置文件参数
+    f = open(config_file, 'r', encoding='utf-8')
+    cont = f.read()
+    parm = yaml.load(cont,Loader=yaml.FullLoader)
+    L=parm['robots']['shape'][2]
+
+    #重新设置配置文件中车辆位置
+    parm['robots']['state']=start_point+[0]
+    parm['robots']['goal']=end_point
+    with open(config_file, 'w') as file:
+        file.write(yaml.dump(parm, allow_unicode=True))
+
+    #设置仿真环境
+    env = EnvBase(config_file,plot=show_process)
+
+    #设置pid控制器
+    pid_distance_controller=PIDLateralController(L,dt,car_steer_limit,dis_K_P,dis_K_D,dis_K_I)
+    pid_angle_controller=PIDLateralAngleController(L,dt,car_steer_limit,ang_K_P,ang_K_D,ang_K_I)
+
+    start_time=time.time()
+    #仿真训练
+    t1_error,pose_list,iter_times=env1_test(env,pid_distance_controller, pid_angle_controller,route=path,speed=car_speed,end_dist=goal_dist,show_cartoon=show_process,rbf_model=None,use_route_speed=False)
+
+
+    end_time=time.time()
+    # print('cost time ',end_time-start_time,'s')
+
+    pose_list_x,pose_list_y,pose_list_theta_r=change_path_type3(pose_list)
+    #分析数据
+    error_list=anylize_path_error(ori_path=path,real_path=pose_list)
+    x_arr=np.arange(1,len(error_list)+1,1)*dt
+
+    #误差绘图
+    # plt.axis([1,x_arr[-1], -1,2])
+    # plt.xlabel('x[t]')
+    # plt.plot(x_arr,error_list,color='red')
+    # plt.plot([0,x_arr[-1]],[0,0],color='black')
+
+    # 路线绘图
+    # plt.plot(path_x,path_y)
+    # plt.plot(pose_list_x,pose_list_y)
+
+    # plt.show()
+
+
+    # print('error is ',t1_error)
+
+    env.end()
+    return t1_error,iter_times
 
 def test_model_in_all_env(model):
     #参数文件
