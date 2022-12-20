@@ -1,7 +1,7 @@
 
 import math
 
-def get_route_s(start_point,end_point,step=0.1,speed=4,r=3):
+def get_route_s(start_point,end_point,step=0.1,speed=4):
     x_arr=[]
     y_arr=[]
     theta_arr=[]
@@ -17,8 +17,8 @@ def get_route_s(start_point,end_point,step=0.1,speed=4,r=3):
     v_arr.append(speed/2)
     for i in range(numb-1):
         now_pose_x=start_point[0]+i*step
-        now_pose_y=start_point[1]+math.sin(i*step/r)
-        now_theta_r=math.cos(i*step/r)
+        now_pose_y=start_point[1]+math.sin(i*step)
+        now_theta_r=math.cos(i*step)
         x_arr.append(now_pose_x)
         y_arr.append(now_pose_y)
         theta_arr.append(now_theta_r)
@@ -43,11 +43,6 @@ def get_route_circle(center,radiu,step=0.1,speed=4):
         x=center[0]+math.cos(i*theta_r_t)*radiu
         y=center[1]+math.sin(i*theta_r_t)*radiu
         theta=i*theta_r_t+math.pi/2
-        while theta>=math.pi:
-            theta-=math.pi*2
-        while theta<=-math.pi:
-            theta+=math.pi*2
-
 
         x_arr.append(x)
         y_arr.append(y)
@@ -199,10 +194,6 @@ def get_route_dir(start_point,end_point,step=0.1,speed=1):
 
 
 if __name__=="__main__":
-    # path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=4)
-
-    path_x,path_y,path_theta_r,path_v=get_route_s([0,20,0],[40,20,0],speed=4)
-
-    # path_x,path_y,path_theta_r,path_v=get_route_circle([20,20],15,speed=4)
+    path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=4)
     for i in range(len(path_v)):
-        print(round(path_x[i],2),round(path_y[i],2),round(path_theta_r[i]*180/math.pi,2))
+        print(path_x[i],path_y[i],path_theta_r[i]*180/math.pi)

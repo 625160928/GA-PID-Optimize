@@ -35,7 +35,7 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, 
             print(car_speed,parm)
             dis_controller.set_parm(p = parm[0], i = parm[2], d = parm[1])
             ang_controller.set_parm(p = parm[3], i = parm[5], d = parm[4])
-        
+
         # print('speed {}'.format(car_speed))
         pose_list.append([car_position_x,car_position_y,car_position_theta_r])
 
@@ -313,17 +313,17 @@ def test_model_in_all_env(model,control=2,speed=1.4,show_pro=False,USE_ROUTE_SPE
     path_arr=[]
 
     #获取需要跟踪的路径
-    # path_x,path_y,path_theta_r,path_v=get_route_dir([0,20,0],[40,20,0],speed=car_speed)
-    # path_arr.append(change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v))
+    path_x,path_y,path_theta_r,path_v=get_route_dir([0,20,0],[40,20,0],speed=car_speed)
+    path_arr.append(change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v))
 
     path_x,path_y,path_theta_r,path_v=get_route_s([0,20,0],[40,20,0],speed=car_speed)
     path_arr.append(change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v))
 
-    # path_x,path_y,path_theta_r,path_v=get_route_circle([20,20],15,speed=car_speed)
-    # path_arr.append(change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v))
-    #
-    # path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=car_speed)
-    # path_arr.append(change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v))
+    path_x,path_y,path_theta_r,path_v=get_route_circle([20,20],15,speed=car_speed)
+    path_arr.append(change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v))
+
+    path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=car_speed)
+    path_arr.append(change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v))
 
     total_error=0
     total_iter=0
