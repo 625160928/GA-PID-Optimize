@@ -1,0 +1,120 @@
+Index: ir_sim2/GA_test/robot_world.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import yaml\r\nimport math\r\nimport numpy as np\r\nimport time\r\nimport matplotlib.pyplot as plt\r\nfrom matplotlib.ticker import MultipleLocator\r\n\r\nfrom ir_sim2.env import EnvBase\r\nfrom ir_sim2.controller_method.pid_lateral_controller import PIDLateralController\r\nfrom ir_sim2.controller_method.pid_lateral_controller_angle import PIDLateralAngleController\r\n\r\n\r\ndef env1_test(env, dis_controller,ang_controller, route, max_iter=3000, speed=1, end_dist=1.0, show_cartoon=False):\r\n    steer_limit=45/180*math.pi\r\n    total_error=0\r\n    pose_list=[]\r\n    route_x,route_y,route_theta_r=change_path_type3(route)\r\n    for i in range(max_iter):\r\n        #获取车辆当前位置\r\n        car_state=env.robot_list[0].state\r\n        # print(car_state)\r\n        car_position_x=car_state[0][0]\r\n        car_position_y=car_state[1][0]\r\n        car_position_theta_r=car_state[2][0]\r\n        car_speed=env.robot_list[0].vel\r\n        # print('speed ',car_speed,)\r\n        pose_list.append([car_position_x,car_position_y,car_position_theta_r])\r\n\r\n\r\n        #计算车离路径的最近距离\r\n        ind,shortest_dis = get_shortest_point(car_position_x,car_position_y,path=route)\r\n        # print(car_position_x,car_position_y,car_position_theta_r*180/math.pi,ind,shortest_dis)\r\n\r\n        #计算误差\r\n        now_error=shortest_dis\r\n        total_error+=now_error\r\n\r\n\r\n\r\n        #计算控制\r\n        steer_control_dis=dis_controller.run_step(car_position_x, car_position_y, car_position_theta_r,\r\n                                              route[ind][0], route[ind][1])\r\n        steer_control_ang=-ang_controller.run_step(car_position_x, car_position_y, car_position_theta_r,\r\n                                              route[ind][0], route[ind][1], route[ind][2],car_speed)\r\n        # print('=============')\r\n        # print('dist ',steer_control_dis*180/math.pi,'  angle ',steer_control_ang*180/math.pi)\r\n\r\n        steer_control=np.clip(steer_control_dis+steer_control_ang,-steer_limit,steer_limit)\r\n\r\n\r\n        car_control=[[[speed],[steer_control]]]\r\n\r\n        #仿真控制\r\n        env.step(car_control)\r\n        if show_cartoon:\r\n            plt.plot(route_x,route_y,color='black')\r\n            env.render(0.05)\r\n\r\n        #结束判断\r\n        goal_dis=math.hypot(route[-1][0]-car_position_x,route[-1][1]-car_position_y)\r\n        if goal_dis<=end_dist:\r\n            print('reach goal')\r\n        if env.done() or goal_dis<=end_dist:\r\n            return total_error,pose_list\r\n    return total_error,pose_list\r\n\r\ndef get_route1(start_point,end_point,step=0.1):\r\n    x_arr=[]\r\n    y_arr=[]\r\n    theta_arr=[]\r\n    theta_r=math.atan2(end_point[1]-start_point[1],end_point[0]-start_point[0])\r\n    dist=math.hypot(end_point[1]-start_point[1],end_point[0]-start_point[0])\r\n    numb=int(dist/step)\r\n    dir_x=math.cos(theta_r)*step\r\n    dir_y=math.sin(theta_r)*step\r\n    #路径起点\r\n    now_pose_x=start_point[0]\r\n    now_pose_y=start_point[1]\r\n    #添加起点\r\n    x_arr.append(start_point[0])\r\n    y_arr.append(start_point[1])\r\n    theta_arr.append(theta_r)\r\n\r\n    for i in range(numb-1):\r\n        now_pose_x+=dir_x\r\n        now_pose_y+=dir_y\r\n        x_arr.append(now_pose_x)\r\n        y_arr.append(now_pose_y)\r\n        theta_arr.append(theta_r)\r\n    return x_arr,y_arr,theta_arr\r\n\r\ndef change_path_type1(route_x,route_y,route_theta_r):\r\n    route=[]\r\n    for i in range(len(route_y)):\r\n        route.append([route_x[i],route_y[i],route_theta_r[i]])\r\n    return route\r\n\r\ndef change_path_type3(route):\r\n    route_x, route_y, route_theta_r=[],[],[]\r\n    for i in range(len(route)):\r\n        route_x.append(route[i][0])\r\n        route_y.append(route[i][1])\r\n        route_theta_r.append(route[i][2])\r\n\r\n\r\n\r\n    return route_x, route_y, route_theta_r\r\n\r\ndef get_shortest_point(car_position_x,car_position_y,path):\r\n    ind=0\r\n    short_dis=math.hypot(car_position_x-path[0][0],car_position_y-path[0][1])\r\n    for  i in range(1,len(path)):\r\n        dis=math.hypot(car_position_x-path[i][0],car_position_y-path[i][1])\r\n        if dis<short_dis:\r\n            short_dis=dis\r\n            ind=i\r\n    return ind,short_dis\r\n\r\ndef anylize_path_error(ori_path,real_path):\r\n    error_list=[]\r\n    for i in range(len(ori_path)):\r\n        min_dis=math.hypot(ori_path[i][0]-real_path[0][0],ori_path[i][1]-real_path[0][1])\r\n        for j in range(1,len(real_path)):\r\n            dis=math.hypot(ori_path[i][0]-real_path[j][0],ori_path[i][1]-real_path[j][1])\r\n            if dis<min_dis:\r\n                min_dis=dis\r\n        # print(min_dis)\r\n        error_list.append(min_dis)\r\n    # print(error_list)\r\n    return error_list\r\n\r\n\r\n\r\n\r\ndef main():\r\n    #参数文件\r\n    config_file='car_world.yaml'\r\n    #车辆转向限制\r\n    car_steer_limit=45 /180*math.pi\r\n    #每步的时间\r\n    dt=0.1\r\n    #是否显示动画\r\n    # show_process=False\r\n    show_process=True\r\n    # 离终点多近算结束\r\n    goal_dist=1\r\n\r\n    #pid的参数\r\n    dis_K_P = 0.02\r\n    dis_K_D = 0.05\r\n    dis_K_I = 0\r\n\r\n    ang_K_P = 0.2\r\n    ang_K_D = 0.05\r\n    ang_K_I = 0\r\n\r\n    #设置车辆的移动速度\r\n    car_speed=4\r\n\r\n    #获取需要跟踪的路径\r\n    path_x,path_y,path_theta_r=get_route1([0,20,0],[40,20,0])\r\n    path=change_path_type1(path_x,path_y,path_theta_r)\r\n\r\n    #设置车辆起点终点\r\n    start_point=path[0]\r\n    end_point=path[-1]\r\n\r\n    #加载设置文件参数\r\n    f = open(config_file, 'r', encoding='utf-8')\r\n    cont = f.read()\r\n    parm = yaml.load(cont,Loader=yaml.FullLoader)\r\n    L=parm['robots']['shape'][2]\r\n\r\n    #重新设置配置文件中车辆位置\r\n    parm['robots']['state']=start_point+[0]\r\n    parm['robots']['goal']=end_point\r\n    with open(config_file, 'w') as file:\r\n        file.write(yaml.dump(parm, allow_unicode=True))\r\n\r\n    #设置仿真环境\r\n    env = EnvBase(config_file)\r\n    env.plot=show_process\r\n\r\n    #设置pid控制器\r\n    pid_distance_controller=PIDLateralController(L,dt,car_steer_limit,dis_K_P,dis_K_D,dis_K_I)\r\n    pid_angle_controller=PIDLateralAngleController(L,dt,car_steer_limit,ang_K_P,ang_K_D,ang_K_I)\r\n\r\n    start_time=time.time()\r\n    #仿真训练\r\n    t1_error,pose_list=env1_test(env,pid_distance_controller, pid_angle_controller,route=path,speed=car_speed,end_dist=goal_dist,show_cartoon=show_process)\r\n\r\n    end_time=time.time()\r\n    print('cost time ',end_time-start_time,'s')\r\n\r\n    pose_list_x,pose_list_y,pose_list_theta_r=change_path_type3(pose_list)\r\n    #分析数据\r\n    error_list=anylize_path_error(ori_path=path,real_path=pose_list)\r\n    x_arr=np.arange(1,len(error_list)+1,1)*dt\r\n\r\n    #误差绘图\r\n    # plt.axis([1,x_arr[-1], -1,2])\r\n    # plt.xlabel('x[t]')\r\n    # plt.plot(x_arr,error_list,color='red')\r\n    # plt.plot([0,x_arr[-1]],[0,0],color='black')\r\n\r\n    # 路线绘图\r\n    # plt.plot(path_x,path_y)\r\n    # plt.plot(pose_list_x,pose_list_y)\r\n\r\n    plt.show()\r\n\r\n\r\n    print('error is ',t1_error)\r\n\r\n    env.end()\r\n\r\nif __name__==\"__main__\":\r\n    main()\r\n    \r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- ir_sim2/GA_test/robot_world.py	(revision 749dd6da9e6e358894c73b0f287bc5f3987e12d8)
++++ ir_sim2/GA_test/robot_world.py	(date 1671014469693)
+@@ -4,6 +4,7 @@
+ import time
+ import matplotlib.pyplot as plt
+ from matplotlib.ticker import MultipleLocator
++from ir_sim2.GA_test.route_files import get_route_s
+ 
+ from ir_sim2.env import EnvBase
+ from ir_sim2.controller_method.pid_lateral_controller import PIDLateralController
+@@ -89,10 +90,15 @@
+         theta_arr.append(theta_r)
+     return x_arr,y_arr,theta_arr
+ 
+-def change_path_type1(route_x,route_y,route_theta_r):
++def change_path_type1(route_x,route_y,route_theta_r,speed_arr=None):
+     route=[]
++    # print(len(speed_arr),len(route_y))
+     for i in range(len(route_y)):
+-        route.append([route_x[i],route_y[i],route_theta_r[i]])
++        if speed_arr==None:
++            route.append([route_x[i],route_y[i],route_theta_r[i]])
++        else:
++
++            route.append([route_x[i],route_y[i],route_theta_r[i],speed_arr[i]])
+     return route
+ 
+ def change_path_type3(route):
+@@ -158,12 +164,14 @@
+     car_speed=4
+ 
+     #获取需要跟踪的路径
+-    path_x,path_y,path_theta_r=get_route1([0,20,0],[40,20,0])
+-    path=change_path_type1(path_x,path_y,path_theta_r)
++    # path_x,path_y,path_theta_r=get_route1([0,20,0],[40,20,0])
++    path_x,path_y,path_theta_r,path_v=get_route_s([0,20,0],[40,20,0],speed=1)
++
++    path=change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v)
+ 
+     #设置车辆起点终点
+-    start_point=path[0]
+-    end_point=path[-1]
++    start_point=path[0][0:2]
++    end_point=path[-1][0:2]
+ 
+     #加载设置文件参数
+     f = open(config_file, 'r', encoding='utf-8')
+Index: ir_sim2/GA_test/route_files.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- ir_sim2/GA_test/route_files.py	(date 1671015139504)
++++ ir_sim2/GA_test/route_files.py	(date 1671015139504)
+@@ -0,0 +1,29 @@
++
++import math
++
++def get_route_s(start_point,end_point,step=0.1,speed=4):
++    x_arr=[]
++    y_arr=[]
++    theta_arr=[]
++    v_arr=[]
++
++    theta_r=math.atan2(end_point[1]-start_point[1],end_point[0]-start_point[0])
++    dist=math.hypot(end_point[1]-start_point[1],end_point[0]-start_point[0])
++    numb=int(dist/step)
++    #添加起点
++    x_arr.append(start_point[0])
++    y_arr.append(start_point[1])
++    theta_arr.append(theta_r)
++    v_arr.append(speed/2)
++    for i in range(numb-1):
++        now_pose_x=start_point[0]+i*step
++        now_pose_y=start_point[1]+math.sin(i*step)
++        now_theta_r=math.cos(i*step)
++        x_arr.append(now_pose_x)
++        y_arr.append(now_pose_y)
++        theta_arr.append(now_theta_r)
++        v_arr.append(speed/2)
++        print(now_pose_x,now_pose_y,now_theta_r*180/math.pi)
++
++
++    return x_arr,y_arr,theta_arr,v_arr
+\ No newline at end of file
+Index: ir_sim2/GA_test/car_world.yaml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>robots:\r\n  goal:\r\n  - 39.9000000000003\r\n  - 20.0\r\n  - 0.0\r\n  number: 1\r\n  shape:\r\n  - 4.6\r\n  - 1.6\r\n  - 3\r\n  - 1.6\r\n  state:\r\n  - 0\r\n  - 20\r\n  - 0.0\r\n  - 0\r\n  type: robot_acker\r\n  vel_type: steer\r\nworld:\r\n  height: 50\r\n  offset:\r\n  - 0\r\n  - 0\r\n  sample_time: 0.1\r\n  step_time: 0.1\r\n  width: 50\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- ir_sim2/GA_test/car_world.yaml	(revision 749dd6da9e6e358894c73b0f287bc5f3987e12d8)
++++ ir_sim2/GA_test/car_world.yaml	(date 1671014462730)
+@@ -1,8 +1,7 @@
+ robots:
+   goal:
+-  - 39.9000000000003
+-  - 20.0
+-  - 0.0
++  - 39.800000000000004
++  - 20.862760643685675
+   number: 1
+   shape:
+   - 4.6
+@@ -12,7 +11,6 @@
+   state:
+   - 0
+   - 20
+-  - 0.0
+   - 0
+   type: robot_acker
+   vel_type: steer

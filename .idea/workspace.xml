@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:upstream" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8e4266ef-6d81-4bb8-bf74-10dc4dc8b86e" name="Default Changelist" comment="修改了原先u型路径的角度不对劲的问题，修改了横向距离的计算方式，新的横向距离更容易理解了">
+      <change beforePath="$PROJECT_DIR$/ir_sim2/GA_test/car_world.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ir_sim2/GA_test/car_world.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ir_sim2/GA_test/robot_world.py" beforeDir="false" afterPath="$PROJECT_DIR$/ir_sim2/GA_test/robot_world.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ir_sim2/GA_test/route_files.py" beforeDir="false" afterPath="$PROJECT_DIR$/ir_sim2/GA_test/route_files.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ir_sim2/controller_method/pid_lateral_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/ir_sim2/controller_method/pid_lateral_controller.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ir_sim2/controller_method/pid_lateral_controller_angle.py" beforeDir="false" afterPath="$PROJECT_DIR$/ir_sim2/controller_method/pid_lateral_controller_angle.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="2IDXVTiVf962TjSiVgn1eFxaDVW" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../高级人工智能/project" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\学习\非线性优化\project\GA-PID-Optimize\ir_sim2\GA_test" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.robot_world">
+    <configuration name="pid_lateral_controller" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="GA-PID-Optimize" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/ir_sim2/controller_method" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ir_sim2/controller_method/pid_lateral_controller.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="robot_world" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="GA-PID-Optimize" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/ir_sim2/GA_test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ir_sim2/GA_test/robot_world.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="route_files" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="GA-PID-Optimize" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/ir_sim2/GA_test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ir_sim2/GA_test/route_files.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="syw_ga (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="GA-PID-Optimize" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/ir_sim2/GA_test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ir_sim2/GA_test/syw_ga.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="syw_ga" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="GA-PID-Optimize" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/ir_sim2/controller_method" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="E:\学习\非线性优化\project\GA-PID-Optimize\ir_sim2\GA_test\syw_ga.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.robot_world" />
+        <item itemvalue="Python.route_files" />
+        <item itemvalue="Python.syw_ga (1)" />
+        <item itemvalue="Python.pid_lateral_controller" />
+        <item itemvalue="Python.syw_ga" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8e4266ef-6d81-4bb8-bf74-10dc4dc8b86e" name="Default Changelist" comment="" />
+      <created>1669717151211</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1669717151211</updated>
+    </task>
+    <task id="LOCAL-00001" summary="添加角度控制的pid，添加角度控制的限制">
+      <created>1670940355391</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1670940355391</updated>
+    </task>
+    <task id="LOCAL-00002" summary="调整速度的获取方法">
+      <created>1670940680473</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1670940680473</updated>
+    </task>
+    <task id="LOCAL-00003" summary="save by syw">
+      <created>1671269741099</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1671269741099</updated>
+    </task>
+    <task id="LOCAL-00004" summary="save by syw">
+      <created>1671269848148</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1671269848148</updated>
+    </task>
+    <task id="LOCAL-00005" summary="add circle route">
+      <created>1671274917942</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1671274917942</updated>
+    </task>
+    <task id="LOCAL-00006" summary="add U route">
+      <created>1671343759949</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1671343759949</updated>
+    </task>
+    <task id="LOCAL-00007" summary="更新速度模式，可以使用匀速跟踪模式与变速跟路径模式">
+      <created>1671344773071</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1671344773071</updated>
+    </task>
+    <task id="LOCAL-00008" summary="添加rbf模型">
+      <created>1671347806719</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1671347806719</updated>
+    </task>
+    <task id="LOCAL-00009" summary="添加了用rbf获取pid参数的方法，与将算法放在所有路径上测试的集合测试">
+      <created>1671353060122</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1671353060122</updated>
+    </task>
+    <task id="LOCAL-00010" summary="save">
+      <created>1671353154189</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1671353154189</updated>
+    </task>
+    <task id="LOCAL-00011" summary="save">
+      <created>1671428797093</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1671428797093</updated>
+    </task>
+    <task id="LOCAL-00012" summary="添加距离过远就退出仿真的判断">
+      <created>1671428990722</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1671428990722</updated>
+    </task>
+    <task id="LOCAL-00013" summary="修改了原先u型路径的角度不对劲的问题，修改了横向距离的计算方式，新的横向距离更容易理解了">
+      <created>1671453800612</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1671453800612</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="添加角度控制的pid，添加角度控制的限制" />
+    <MESSAGE value="调整速度的获取方法" />
+    <MESSAGE value="save by syw" />
+    <MESSAGE value="add circle route" />
+    <MESSAGE value="add U route" />
+    <MESSAGE value="更新速度模式，可以使用匀速跟踪模式与变速跟路径模式" />
+    <MESSAGE value="添加rbf模型" />
+    <MESSAGE value="添加了用rbf获取pid参数的方法，与将算法放在所有路径上测试的集合测试" />
+    <MESSAGE value="save" />
+    <MESSAGE value="添加距离过远就退出仿真的判断" />
+    <MESSAGE value="修改了原先u型路径的角度不对劲的问题，修改了横向距离的计算方式，新的横向距离更容易理解了" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改了原先u型路径的角度不对劲的问题，修改了横向距离的计算方式，新的横向距离更容易理解了" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1671545833873">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="-1180" y="275" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1670155884959" />
+    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671545833873" />
+    <state width="1899" height="348" key="GridCell.Tab.0.bottom" timestamp="1671545835158">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="308" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1671543737560" />
+    <state width="1899" height="348" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671545835158" />
+    <state width="1899" height="348" key="GridCell.Tab.0.center" timestamp="1671545835158">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="308" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1671543737560" />
+    <state width="1899" height="348" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671545835158" />
+    <state width="1899" height="348" key="GridCell.Tab.0.left" timestamp="1671545835158">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="308" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1671543737560" />
+    <state width="1899" height="348" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671545835158" />
+    <state width="1899" height="348" key="GridCell.Tab.0.right" timestamp="1671545835158">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="308" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1671543737560" />
+    <state width="1899" height="348" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671545835158" />
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1671545835158">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1671543327253" />
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671545835158" />
+    <state width="1899" height="348" key="GridCell.Tab.1.center" timestamp="1671545835158">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1671543327253" />
+    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671545835158" />
+    <state width="1899" height="348" key="GridCell.Tab.1.left" timestamp="1671545835158">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1671543327253" />
+    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671545835158" />
+    <state width="1899" height="348" key="GridCell.Tab.1.right" timestamp="1671545835158">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1671543327253" />
+    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671545835158" />
+    <state x="668" y="243" key="SettingsEditor" timestamp="1671377338751">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="-1459" y="164" key="SettingsEditor/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1669717281432" />
+    <state x="668" y="243" key="SettingsEditor/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671377338751" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1671453805675">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671453805675" />
+    <state x="763" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1671428791109">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="-1157" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1670927987634" />
+    <state x="763" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671428791109" />
+    <state x="800" y="304" key="refactoring.ChangeSignatureDialog" timestamp="1670939389949">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="800" y="304" key="refactoring.ChangeSignatureDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1670939389949" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1671351618497">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671351618497" />
+  </component>
+</project>

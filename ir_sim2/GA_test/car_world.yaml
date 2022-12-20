@@ -1,0 +1,26 @@
+robots:
+  goal:
+  - 39.800000000000004
+  - 20.644444092296936
+  - 0.7646514316363895
+  number: 1
+  shape:
+  - 4.6
+  - 1.6
+  - 3
+  - 1.6
+  state:
+  - 0
+  - 20
+  - 0.0
+  - 0
+  type: robot_acker
+  vel_type: steer
+world:
+  height: 50
+  offset:
+  - 0
+  - 0
+  sample_time: 0.1
+  step_time: 0.1
+  width: 50
