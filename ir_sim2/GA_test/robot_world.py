@@ -18,6 +18,10 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=4000, speed=1,
     pose_list=[]
     route_x,route_y,route_theta_r=change_path_type3(route)
     old_ind=0
+
+    if show_cartoon:
+        plt.plot(route_x, route_y, color='black')
+
     for i in range(max_iter):
         #获取车辆当前位置
         car_state=env.robot_list[0].state
@@ -78,7 +82,7 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=4000, speed=1,
         #仿真控制
         env.step(car_control)
         if show_cartoon:
-            plt.plot(route_x,route_y,color='black')
+            # plt.plot(route_x,route_y,color='black')
             env.render(0.05)
 
         #结束判断
@@ -568,7 +572,7 @@ def test_rbf_parm_pid():
 
 if __name__=="__main__":
     # test_rbf_parm_pid()
-    # main()
+    #     # main()
     parm=  [1.1512398965943231, 0.7832528746335857, 1.1264852450737861]
 
-    test_model_in_all_env(parm,1,0.5,show_pro=True)
+    # test_model_in_all_env(parm,1,0.5,show_pro=True)
