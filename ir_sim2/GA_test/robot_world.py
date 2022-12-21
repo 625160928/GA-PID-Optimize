@@ -18,6 +18,10 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, 
     pose_list=[]
     route_x,route_y,route_theta_r=change_path_type3(route)
     old_ind=0
+
+    if show_cartoon:
+        plt.plot(route_x,route_y,color='black')
+
     for i in range(max_iter):
         #获取车辆当前位置
         car_state=env.robot_list[0].state
@@ -80,7 +84,7 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, 
         #仿真控制
         env.step(car_control)
         if show_cartoon:
-            plt.plot(route_x,route_y,color='black')
+            # plt.plot(route_x,route_y,color='black')
             plt.scatter(route_x[ind],route_y[ind],color='blue')
             env.render(0.05)
 

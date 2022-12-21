@@ -6,10 +6,10 @@ import yaml
 from robot_world import test_pid_parameter,test_model_in_all_env
 from sklearn.kernel_ridge import KernelRidge
 
-NGEN = 1000  # Number of Generation
+NGEN = 150  # Number of Generation
 MU = 100  # Number of individual in population
 CXPB = 0.8  # Crossover probability
-NDIM = 3  # Number of dimension of the individual (=number of gene)
+NDIM = 6  # Number of dimension of the individual (=number of gene)
 with open('car_world.yaml') as f:
     PARM = yaml.safe_load(f)
 lock = multiprocessing.Lock()
@@ -22,7 +22,9 @@ BOUNDS = [(LOW2, UP2) for i in range(NDIM)]
 MEAN = [0 for i in range(NDIM)]
 SIGMA = [1 for i in range(NDIM)]
 BOUNDS[0]=(LOW1, UP1)
+BOUNDS[3]=(LOW1, UP1)
 MEAN[0]=1.5
+MEAN[3]=1.5
 
 # print(MEAN)
 # print(BOUNDS)
@@ -62,8 +64,8 @@ def evaluation(ind):
     # model.fit(X, y)
     # print('now state ',Now_controller,Now_speed)
 
-    objective1, objective2 = test_model_in_all_env(model=ind,control=Now_controller,speed=Now_speed,show_pro=False)
-    print('ind ',ind,' e ',objective1, ' t ',objective2)
+    objective1, objective2 = test_model_in_all_env(model=ind,control=2,speed=Now_speed,show_pro=False)
+    # print('ind ',ind,' e ',objective1, ' t ',objective2)
     # finally:
     #     lock.release()
 
@@ -78,8 +80,11 @@ def main():
     data = []
     if Now_controller==0:
         print("init: speed")
-    elif Now_controller:
+    elif Now_controller==1:
         print("init: ang")
+    elif Now_controller==2:
+        print("init: all")
+
 
     # Evaluate the individuals with an invalid fitness
     invalid_ind = [ind for ind in pop if not ind.fitness.valid]
@@ -120,7 +125,7 @@ def main():
         # Select the next generation population
         pop = toolbox.select(pop + offspring, MU)
 
-        break
+
 
     pareto.update(pop)
 
@@ -143,4 +148,4 @@ if __name__ == "__main__":
             with open('./pareto_front'+str(controller)+'_'+str(int(Now_speed*10))+'.txt', 'w') as front:
                 for ind in optimal_front:
                     front.write(str(ind) + '\n')
-            break
+            # break

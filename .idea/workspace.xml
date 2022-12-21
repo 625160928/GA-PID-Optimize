@@ -26,19 +26,15 @@
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
         <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
         <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="BRANCH:origin/syw_main" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:origin/main" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8e4266ef-6d81-4bb8-bf74-10dc4dc8b86e" name="Default Changelist" comment="保存merge">
-      <change afterPath="$PROJECT_DIR$/ir_sim2/GA_test/syw_ga.py" afterDir="false" />
+    <list default="true" id="8e4266ef-6d81-4bb8-bf74-10dc4dc8b86e" name="Default Changelist" comment="保存ga">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ir_sim2/GA_test/car_world.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/ir_sim2/GA_test/car_world.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ir_sim2/GA_test/data/pareto_front0_10.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ir_sim2/GA_test/data/pareto_front0_5.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/ir_sim2/GA_test/robot_world.py" beforeDir="false" afterPath="$PROJECT_DIR$/ir_sim2/GA_test/robot_world.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ir_sim2/GA_test/route_files.py" beforeDir="false" afterPath="$PROJECT_DIR$/ir_sim2/GA_test/route_files.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ir_sim2/GA_test/syw_ga.py" beforeDir="false" afterPath="$PROJECT_DIR$/ir_sim2/GA_test/syw_ga.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +61,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/ir_sim2/GA_test" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../高级人工智能/project" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -73,10 +69,11 @@
       <recent name="E:\学习\非线性优化\project\GA-PID-Optimize\ir_sim2\GA_test" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\学习\非线性优化\project\GA-PID-Optimize\ir_sim2\GA_test\data" />
       <recent name="E:\学习\非线性优化\project\GA-PID-Optimize\ir_sim2\GA_test" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.robot_world">
+  <component name="RunManager" selected="Python.syw_ga (1)">
     <configuration name="pid_lateral_controller" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GA-PID-Optimize" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -184,9 +181,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.syw_ga (1)" />
         <item itemvalue="Python.robot_world" />
         <item itemvalue="Python.route_files" />
-        <item itemvalue="Python.syw_ga (1)" />
         <item itemvalue="Python.pid_lateral_controller" />
         <item itemvalue="Python.syw_ga" />
       </list>
@@ -299,7 +296,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671551986163</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="保存ga">
+      <created>1671553335919</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1671553335919</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -313,7 +317,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/syw_main" />
+                        <option value="origin/main" />
                       </list>
                     </value>
                   </entry>
@@ -339,38 +343,39 @@
     <MESSAGE value="添加距离过远就退出仿真的判断" />
     <MESSAGE value="修改了原先u型路径的角度不对劲的问题，修改了横向距离的计算方式，新的横向距离更容易理解了" />
     <MESSAGE value="保存merge" />
-    <option name="LAST_COMMIT_MESSAGE" value="保存merge" />
+    <MESSAGE value="保存ga" />
+    <option name="LAST_COMMIT_MESSAGE" value="保存ga" />
   </component>
   <component name="WindowStateProjectService">
     <state x="86" y="110" width="1736" height="856" key="DiffContextDialog" timestamp="1671553265939">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="86" y="110" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671553265939" />
-    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1671545833873">
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1671590990233">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="-1180" y="275" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1670155884959" />
-    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671545833873" />
-    <state width="1899" height="651" key="GridCell.Tab.0.bottom" timestamp="1671552068180">
+    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671590990233" />
+    <state width="1899" height="379" key="GridCell.Tab.0.bottom" timestamp="1671554871363">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="308" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1671543737560" />
-    <state width="1899" height="651" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671552068180" />
-    <state width="1899" height="651" key="GridCell.Tab.0.center" timestamp="1671552068180">
+    <state width="1899" height="379" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671554871363" />
+    <state width="1899" height="379" key="GridCell.Tab.0.center" timestamp="1671554871363">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="308" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1671543737560" />
-    <state width="1899" height="651" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671552068180" />
-    <state width="1899" height="651" key="GridCell.Tab.0.left" timestamp="1671552068180">
+    <state width="1899" height="379" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671554871363" />
+    <state width="1899" height="379" key="GridCell.Tab.0.left" timestamp="1671554871363">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="308" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1671543737560" />
-    <state width="1899" height="651" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671552068180" />
-    <state width="1899" height="651" key="GridCell.Tab.0.right" timestamp="1671552068180">
+    <state width="1899" height="379" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671554871363" />
+    <state width="1899" height="379" key="GridCell.Tab.0.right" timestamp="1671554871363">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="308" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1671543737560" />
-    <state width="1899" height="651" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671552068180" />
+    <state width="1899" height="379" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1671554871363" />
     <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1671550630883">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -439,7 +444,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/ir_sim2/GA_test/robot_world.py</url>
-          <line>100</line>
+          <line>104</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
