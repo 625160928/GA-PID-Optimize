@@ -11,7 +11,7 @@ from ir_sim2.controller_method.pid_lateral_controller import PIDLateralControlle
 from ir_sim2.controller_method.pid_lateral_controller_angle import PIDLateralAngleController
 
 
-def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, end_dist=1.0,
+def env1_test(env, dis_controller,ang_controller, route, max_iter=4000, speed=1, end_dist=1.0,
               show_cartoon=False,rbf_model=None,use_route_speed=False,break_dis=10):
     steer_limit=45/180*math.pi
     total_error=0
@@ -61,7 +61,7 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, 
         #计算控制
         steer_control_dis=dis_controller.run_step(car_position_x, car_position_y, car_position_theta_r,
                                               route[ind][0], route[ind][1], route[ind][2])
-        steer_control_ang=-ang_controller.run_step(car_position_x, car_position_y, car_position_theta_r,
+        steer_control_ang=ang_controller.run_step(car_position_x, car_position_y, car_position_theta_r,
                                               route[ind][0], route[ind][1], route[ind][2],car_speed)
         # print('=============')
         # print('dist ',steer_control_dis*180/math.pi,'  angle ',steer_control_ang*180/math.pi)
@@ -246,7 +246,7 @@ def test_pid_parameter(model):
     env.end()
     return t1_error,iter_times
 
-def test_spead_pid_parameter(ind,car_speed,show_process=False):
+def test_spead_pid_parameter(ind,car_speed,path_id,show_process=False):
     #参数文件
     config_file='car_world.yaml'
     #车辆转向限制
@@ -260,23 +260,22 @@ def test_spead_pid_parameter(ind,car_speed,show_process=False):
     goal_dist=1
 
     #pid的参数
-    # dis_K_P = 0.3
-    # dis_K_D = 0.05
-    # dis_K_I = 0
-    #
-    # ang_K_P = 0.1
-    # ang_K_D = 0.05
-    # ang_K_I = 0
-    dis_K_P, dis_K_D, dis_K_I, ang_K_P, ang_K_D, ang_K_I = ind
+    dis_K_P, dis_K_I, dis_K_D, ang_K_P, ang_K_I, ang_K_D = ind
 
     #设置车辆的移动速度
     # car_speed=4
 
     #获取需要跟踪的路径
-    # path_x,path_y,path_theta_r=get_route1([0,20,0],[40,20,0])
-    # path_x,path_y,path_theta_r,path_v=get_route_s([0,20,0],[40,20,0],speed=1)
-    # path_x,path_y,path_theta_r,path_v=get_route_circle([20,20],15,speed=1)
-    path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=4)
+
+    if path_id == 0:
+        path_x, path_y, path_theta_r,path_v = get_route_dir([0, 20, 0], [40, 20, 0],speed=car_speed)
+    elif path_id == 1:
+        path_x, path_y, path_theta_r, path_v = get_route_s([0, 20, 0], [40, 20, 0], speed=car_speed)
+    elif path_id == 2:
+        path_x,path_y,path_theta_r,path_v=get_route_circle([20,20],15,speed=car_speed)
+    else:
+        path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=car_speed)
+
 
     path=change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v)
 
@@ -314,8 +313,8 @@ def test_spead_pid_parameter(ind,car_speed,show_process=False):
 
     pose_list_x,pose_list_y,pose_list_theta_r=change_path_type3(pose_list)
     #分析数据
-    error_list=anylize_path_error(ori_path=path,real_path=pose_list)
-    x_arr=np.arange(1,len(error_list)+1,1)*dt
+    # error_list=anylize_path_error(ori_path=path,real_path=pose_list)
+    # x_arr=np.arange(1,len(error_list)+1,1)*dt
 
     #误差绘图
     # plt.axis([1,x_arr[-1], -1,2])
