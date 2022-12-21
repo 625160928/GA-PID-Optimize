@@ -11,13 +11,17 @@ from ir_sim2.controller_method.pid_lateral_controller import PIDLateralControlle
 from ir_sim2.controller_method.pid_lateral_controller_angle import PIDLateralAngleController
 
 
-def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, end_dist=1.0,
+def env1_test(env, dis_controller,ang_controller, route, max_iter=4000, speed=1, end_dist=1.0,
               show_cartoon=False,rbf_model=None,use_route_speed=False,break_dis=10):
     steer_limit=45/180*math.pi
     total_error=0
     pose_list=[]
     route_x,route_y,route_theta_r=change_path_type3(route)
     old_ind=0
+
+    if show_cartoon:
+        plt.plot(route_x, route_y, color='black')
+
     for i in range(max_iter):
         #获取车辆当前位置
         car_state=env.robot_list[0].state
@@ -52,14 +56,15 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, 
         total_error+=now_error
 
         if shortest_dis>break_dis:
-            return total_error+1000,pose_list,max_iter*2-i
+            # print('out route ',i)
+            return total_error+10000,pose_list,max_iter*2-i
 
 
 
         #计算控制
         steer_control_dis=dis_controller.run_step(car_position_x, car_position_y, car_position_theta_r,
                                               route[ind][0], route[ind][1], route[ind][2])
-        steer_control_ang=-ang_controller.run_step(car_position_x, car_position_y, car_position_theta_r,
+        steer_control_ang=ang_controller.run_step(car_position_x, car_position_y, car_position_theta_r,
                                               route[ind][0], route[ind][1], route[ind][2],car_speed)
         # print('=============')
         # print('dist ',steer_control_dis*180/math.pi,'  angle ',steer_control_ang*180/math.pi)
@@ -75,15 +80,18 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, 
         #仿真控制
         env.step(car_control)
         if show_cartoon:
-            plt.plot(route_x,route_y,color='black')
+            # plt.plot(route_x,route_y,color='black')
             env.render(0.05)
 
         #结束判断
         goal_dis=math.hypot(route[-1][0]-car_position_x,route[-1][1]-car_position_y)
         if goal_dis<=end_dist:
-            print('reach goal')
+
+            # print('reach goal')
+            pass
         if env.done() or goal_dis<=end_dist:
             return total_error,pose_list,i
+    # print('time limit ')
     return total_error,pose_list,i
 
 def get_route1(start_point,end_point,step=0.1):
@@ -244,7 +252,7 @@ def test_pid_parameter(model,show_process):
     env.end()
     return t1_error,iter_times
 
-def test_spead_pid_parameter(ind,car_speed,show_process=False):
+def test_spead_pid_parameter(ind,car_speed,path_id,show_process=False):
     #参数文件
     config_file='car_world.yaml'
     #车辆转向限制
@@ -258,23 +266,22 @@ def test_spead_pid_parameter(ind,car_speed,show_process=False):
     goal_dist=1
 
     #pid的参数
-    # dis_K_P = 0.3
-    # dis_K_D = 0.05
-    # dis_K_I = 0
-    #
-    # ang_K_P = 0.1
-    # ang_K_D = 0.05
-    # ang_K_I = 0
-    dis_K_P, dis_K_D, dis_K_I, ang_K_P, ang_K_D, ang_K_I = ind
+    dis_K_P, dis_K_I, dis_K_D, ang_K_P, ang_K_I, ang_K_D = ind
 
     #设置车辆的移动速度
     # car_speed=4
 
     #获取需要跟踪的路径
-    # path_x,path_y,path_theta_r=get_route1([0,20,0],[40,20,0])
-    # path_x,path_y,path_theta_r,path_v=get_route_s([0,20,0],[40,20,0],speed=1)
-    # path_x,path_y,path_theta_r,path_v=get_route_circle([20,20],15,speed=1)
-    path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=4)
+
+    if path_id == 0:
+        path_x, path_y, path_theta_r,path_v = get_route_dir([0, 20, 0], [40, 20, 0],speed=car_speed)
+    elif path_id == 1:
+        path_x, path_y, path_theta_r, path_v = get_route_s([0, 20, 0], [40, 20, 0], speed=car_speed)
+    elif path_id == 2:
+        path_x,path_y,path_theta_r,path_v=get_route_circle([20,20],15,speed=car_speed)
+    else:
+        path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=car_speed)
+
 
     path=change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v)
 
@@ -312,8 +319,8 @@ def test_spead_pid_parameter(ind,car_speed,show_process=False):
 
     pose_list_x,pose_list_y,pose_list_theta_r=change_path_type3(pose_list)
     #分析数据
-    error_list=anylize_path_error(ori_path=path,real_path=pose_list)
-    x_arr=np.arange(1,len(error_list)+1,1)*dt
+    # error_list=anylize_path_error(ori_path=path,real_path=pose_list)
+    # x_arr=np.arange(1,len(error_list)+1,1)*dt
 
     #误差绘图
     # plt.axis([1,x_arr[-1], -1,2])
@@ -333,7 +340,7 @@ def test_spead_pid_parameter(ind,car_speed,show_process=False):
     env.end()
     return t1_error,iter_times
 
-def test_model_in_all_env(model):
+def test_model_in_all_env(model,control=0,speed=1.4,show_pro=False):
     #参数文件
     config_file='car_world.yaml'
     #车辆转向限制
@@ -342,22 +349,34 @@ def test_model_in_all_env(model):
     dt=0.1
     #是否显示动画
     # show_process=False
-    show_process=True
+    # show_process=True
+    show_process=show_pro
     # 离终点多近算结束
     goal_dist=1
+    if control==0:
+        #pid的参数
+        dis_K_P = model[0]
+        dis_K_D = model[1]
+        dis_K_I = model[2]
 
-    #pid的参数
-    dis_K_P = 0.3
-    dis_K_D = 0.05
-    dis_K_I = 0
+        ang_K_P = 0
+        ang_K_D = 0
+        ang_K_I = 0
+    else:
+        #pid的参数
+        dis_K_P = 0
+        dis_K_D = 0
+        dis_K_I = 0
 
-    ang_K_P = 0.1
-    ang_K_D = 0.05
-    ang_K_I = 0
+        ang_K_P = model[0]
+        ang_K_D = model[1]
+        ang_K_I = model[2]
+
 
     #设置车辆的移动速度
-    car_speed=1.4
+    car_speed=speed
 
+    max_turn=np.clip(int(1500/car_speed),500,3000)
     path_arr=[]
 
     #获取需要跟踪的路径
@@ -405,13 +424,13 @@ def test_model_in_all_env(model):
         start_time=time.time()
         # print(model==None)
         #仿真训练
-        t1_error,pose_list,iter_times=env1_test(env,pid_distance_controller, pid_angle_controller,route=path,
-                                                speed=car_speed,end_dist=goal_dist,show_cartoon=show_process,rbf_model=model,use_route_speed=False)
+        t1_error,pose_list,iter_times=env1_test(env,pid_distance_controller, pid_angle_controller,route=path,max_iter=max_turn,
+                                                speed=car_speed,end_dist=goal_dist,show_cartoon=show_process,rbf_model=None,use_route_speed=False)
 
         end_time=time.time()
         env.end()
-        print('cost time ',end_time-start_time,'s',iter_times)
-        print('error is ',t1_error)
+        # print('cost time ',end_time-start_time,'s',iter_times)
+        # print('error is ',t1_error)
         total_iter+=iter_times
         total_error+=t1_error
 
@@ -426,16 +445,16 @@ def main():
     #每步的时间
     dt=0.1
     #是否显示动画
-    # show_process=False
-    show_process=True
+    show_process=False
+    # show_process=True
     # 离终点多近算结束
     goal_dist=1
 
     #pid的参数
     #0.5764250986766484, 1.879224972658214, 0.8307444833606002, 4.384537513353423, 0.895612962471191, 0.27693529780814263
-    dis_K_P = 1
-    dis_K_D =  0.2
-    dis_K_I = 0.0
+    dis_K_P = 0.5
+    dis_K_D =  0
+    dis_K_I = 0.01
     # dis_K_P = 0
     # dis_K_D =  0
     # dis_K_I = 0
@@ -551,4 +570,7 @@ def test_rbf_parm_pid():
 
 if __name__=="__main__":
     # test_rbf_parm_pid()
-    main()
+    #     # main()
+    parm=  [1.1512398965943231, 0.7832528746335857, 1.1264852450737861]
+
+    # test_model_in_all_env(parm,1,0.5,show_pro=True)
