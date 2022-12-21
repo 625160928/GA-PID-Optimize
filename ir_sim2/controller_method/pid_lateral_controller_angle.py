@@ -35,6 +35,7 @@ class PIDLateralAngleController(object):  # pylint: disable=too-few-public-metho
         #  限制车轮转角
         self.__car_steer_limit = car_steer_limit
         self.__pind=0
+        self.iter_max=math.pi*6
     def get_error_list(self):
         return self.error_list
     #将加速度与横向偏移变成车辆速度与角速度
@@ -103,7 +104,7 @@ class PIDLateralAngleController(object):  # pylint: disable=too-few-public-metho
 
         _dot=yaw_error1
         #if _cross[2] < 0:
-        _dot *= -1.0
+        # _dot *= -1.0
 
         previous_error = self.error
         # print('waypointyaw',waypointyaw,'error ', _dot)
@@ -112,10 +113,12 @@ class PIDLateralAngleController(object):  # pylint: disable=too-few-public-metho
         self.error_list.append(self.error*180/math.pi)
         self.path_yaw_list.append(waypointyaw*180/math.pi)
         # restrict integral term to avoid integral windup
-        self.error_integral = np.clip(self.error_integral + self.error, -400.0, 400.0)
+        self.error_integral = np.clip(self.error_integral + self.error, -self.iter_max, self.iter_max)
+
         self.error_derivative = self.error - previous_error
         # print('error ', self.error)
         output = self._K_P * self.error + self._K_I * self.error_integral + self._K_D * self.error_derivative
+        # print('error ang p',round(self.error*180/math.pi,2),' i ',self.error_integral,' d ',self.error_derivative ,np.clip(output, -1.0, 1.0) )
         #会返回一个范围从-1到1的数值
         return np.clip(output, -1.0, 1.0)*self.__car_steer_limit
 

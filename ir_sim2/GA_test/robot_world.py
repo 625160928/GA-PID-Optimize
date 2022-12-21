@@ -11,7 +11,7 @@ from ir_sim2.controller_method.pid_lateral_controller import PIDLateralControlle
 from ir_sim2.controller_method.pid_lateral_controller_angle import PIDLateralAngleController
 
 
-def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, end_dist=1.0,
+def env1_test(env, dis_controller,ang_controller, route, max_iter=4000, speed=1, end_dist=1.0,
               show_cartoon=False,rbf_model=None,use_route_speed=False,break_dis=10):
     steer_limit=45/180*math.pi
     total_error=0
@@ -62,7 +62,7 @@ def env1_test(env, dis_controller,ang_controller, route, max_iter=600, speed=1, 
         #计算控制
         steer_control_dis=dis_controller.run_step(car_position_x, car_position_y, car_position_theta_r,
                                               route[ind][0], route[ind][1], route[ind][2])
-        steer_control_ang=-ang_controller.run_step(car_position_x, car_position_y, car_position_theta_r,
+        steer_control_ang=ang_controller.run_step(car_position_x, car_position_y, car_position_theta_r,
                                               route[ind][0], route[ind][1], route[ind][2],car_speed)
         # print('=============')
         # print('dist ',steer_control_dis*180/math.pi,'  angle ',steer_control_ang*180/math.pi)
@@ -250,6 +250,93 @@ def test_pid_parameter(model):
     env.end()
     return t1_error,iter_times
 
+def test_spead_pid_parameter(ind,car_speed,path_id,show_process=False):
+    #参数文件
+    config_file='car_world.yaml'
+    #车辆转向限制
+    car_steer_limit=45 /180*math.pi
+    #每步的时间
+    dt=0.1
+    #是否显示动画
+    # show_process=False
+    # show_process=True
+    # 离终点多近算结束
+    goal_dist=1
+
+    #pid的参数
+    dis_K_P, dis_K_I, dis_K_D, ang_K_P, ang_K_I, ang_K_D = ind
+
+    #设置车辆的移动速度
+    # car_speed=4
+
+    #获取需要跟踪的路径
+
+    if path_id == 0:
+        path_x, path_y, path_theta_r,path_v = get_route_dir([0, 20, 0], [40, 20, 0],speed=car_speed)
+    elif path_id == 1:
+        path_x, path_y, path_theta_r, path_v = get_route_s([0, 20, 0], [40, 20, 0], speed=car_speed)
+    elif path_id == 2:
+        path_x,path_y,path_theta_r,path_v=get_route_circle([20,20],15,speed=car_speed)
+    else:
+        path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=car_speed)
+
+
+    path=change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v)
+
+    #设置车辆起点终点
+    start_point=path[0][0:3]
+    end_point=path[-1][0:3]
+    # print('===============',start_point,end_point)
+
+    #加载设置文件参数
+    f = open(config_file, 'r', encoding='utf-8')
+    cont = f.read()
+    parm = yaml.load(cont,Loader=yaml.FullLoader)
+    L=parm['robots']['shape'][2]
+
+    #重新设置配置文件中车辆位置
+    parm['robots']['state']=start_point+[0]
+    parm['robots']['goal']=end_point
+    with open(config_file, 'w') as file:
+        file.write(yaml.dump(parm, allow_unicode=True))
+
+    #设置仿真环境
+    env = EnvBase(config_file,plot=show_process)
+
+    #设置pid控制器
+    pid_distance_controller=PIDLateralController(L,dt,car_steer_limit,dis_K_P,dis_K_D,dis_K_I)
+    pid_angle_controller=PIDLateralAngleController(L,dt,car_steer_limit,ang_K_P,ang_K_D,ang_K_I)
+
+    start_time=time.time()
+    #仿真训练
+    t1_error,pose_list,iter_times=env1_test(env,pid_distance_controller, pid_angle_controller,route=path,speed=car_speed,end_dist=goal_dist,show_cartoon=show_process,rbf_model=None,use_route_speed=False)
+
+
+    end_time=time.time()
+    # print('cost time ',end_time-start_time,'s')
+
+    pose_list_x,pose_list_y,pose_list_theta_r=change_path_type3(pose_list)
+    #分析数据
+    # error_list=anylize_path_error(ori_path=path,real_path=pose_list)
+    # x_arr=np.arange(1,len(error_list)+1,1)*dt
+
+    #误差绘图
+    # plt.axis([1,x_arr[-1], -1,2])
+    # plt.xlabel('x[t]')
+    # plt.plot(x_arr,error_list,color='red')
+    # plt.plot([0,x_arr[-1]],[0,0],color='black')
+
+    # 路线绘图
+    # plt.plot(path_x,path_y)
+    # plt.plot(pose_list_x,pose_list_y)
+
+    # plt.show()
+
+
+    # print('error is ',t1_error)
+
+    env.end()
+    return t1_error,iter_times
 
 def test_model_in_all_env(model,control=0,speed=1.4,show_pro=False):
     #参数文件
