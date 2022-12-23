@@ -164,7 +164,7 @@ def anylize_path_error(ori_path,real_path):
     # print(error_list)
     return error_list
 
-def test_pid_parameter(model,show_process):
+def test_pid_parameter(model,car_speed,path_id,show_process):
     #参数文件
     config_file='car_world.yaml'
     #车辆转向限制
@@ -187,13 +187,17 @@ def test_pid_parameter(model,show_process):
     ang_K_I = 0
 
     #设置车辆的移动速度
-    car_speed=4
+    # car_speed=4
 
     #获取需要跟踪的路径
-    # path_x,path_y,path_theta_r=get_route1([0,20,0],[40,20,0])
-    # path_x,path_y,path_theta_r,path_v=get_route_s([0,20,0],[40,20,0],speed=1)
-    # path_x,path_y,path_theta_r,path_v=get_route_circle([20,20],15,speed=1)
-    path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=4)
+    if path_id == 0:
+        path_x, path_y, path_theta_r,path_v = get_route_dir([0, 20, 0], [40, 20, 0],speed=car_speed)
+    elif path_id == 1:
+        path_x, path_y, path_theta_r, path_v = get_route_s([0, 20, 0], [40, 20, 0], speed=car_speed)
+    elif path_id == 2:
+        path_x,path_y,path_theta_r,path_v=get_route_circle([20,20],15,speed=car_speed)
+    else:
+        path_x,path_y,path_theta_r,path_v=get_route_U(30,[20,35],10,speed=car_speed)
 
     path=change_path_type1(path_x,path_y,path_theta_r,speed_arr=path_v)
 

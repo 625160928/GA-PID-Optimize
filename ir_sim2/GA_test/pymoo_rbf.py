@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import os
 from pymoo.core.problem import ElementwiseProblem
 from robot_world import test_spead_pid_parameter
 from sklearn.kernel_ridge import KernelRidge
@@ -21,19 +22,24 @@ class PIDProblem(ElementwiseProblem):
                          xu=ub)
 
     def _evaluate(self, x, out, *args, **kwargs):
-        X = np.arange(0.5,4,1).reshape(-1,1)
+        X = np.arange(0.2,4,0.4).reshape(-1,1)
         y = np.asarray(x).reshape(-1,6)
         model = KernelRidge(alpha=1.0)
         model.fit(X,y)
-        f1, f2 = test_pid_parameter(model,False)
-        out["F"] = [f1, f2]
+        F1,F2=0,0
+        for path_id in range(0, 4):
+            for speed in range(1,5):
+                f1, f2 = test_pid_parameter(model,speed,path_id ,False)
+                F1+=f1
+                F2+=f2
+        out["F"] = [F1/F2, F2]
 
 def GA():
-    n_var = 24
+    n_var = 60
     n_obj = 2
-    lb = np.zeros(24)
-    ub = np.ones(24)
-    for i in range(8):
+    lb = np.zeros(60)
+    ub = np.ones(60)
+    for i in range(20):
         ub[i*3] = 2
     pass
 
@@ -61,6 +67,8 @@ def GA():
     pareto_front_ans = np.concatenate((np.array(X), np.array(F)), axis=1)
     pareto_front_ans = pareto_front_ans*2
     pareto_front_ans.tofile('data2.csv', sep = ',')
+    with open('./pareto_front.txt', 'w') as front:
+        front.write('')
     np.savetxt('areto_front.txt', pareto_front_ans, delimiter=',')
     # with open('../output/pareto_front_{:.2}.txt'.format(car_speed), 'w') as front:
     #     for ind in pareto_front_ans:
@@ -68,11 +76,13 @@ def GA():
     #         front.write(str(ind) + '\n')
 
 if __name__ == '__main__':
-#     ind = [9.404604045995696993e-01,1.599548769572369800e+00,8.437550288483947059e-02,3.515285627167905602e+00,2.531957976144185718e-01,1.594269689323443151e-01,3.005726008079294242e+00,3.370993116147930624e-01,6.503581162200320342e-01,4.300708963239069926e-01,9.755480017216335842e-01,1.872757359358949714e-01,8.782074319869852541e-01,1.189763183305670297e-01,1.202293754216288368e+00,3.988525340856445833e+00,1.825991299699351700e+00,6.016680902519394580e-02,2.366545668345299447e+00,7.032737712113035222e-02,1.094372576428940924e+00,3.282182222207676414e+00,1.450303787541600720e+00,1.126259973832459238e+00
-# ]
-#     X = np.arange(0.5,4,1).reshape(-1,1)
-#     y = np.asarray(ind).reshape(-1,6)
-#     model = KernelRidge(alpha=1.0)
-#     model.fit(X,y)
-#     f1, f2 = test_pid_parameter(model,True)
+    # ind = [3.750300356647885192e+00,1.030159720710949411e+00,4.417624295582034399e-01,3.971451140049683470e+00,2.583085823514462698e-01,1.211155511068839202e-02,1.337473167006886676e+00,9.195573510150270580e-02,1.113593940872910748e+00,3.999926355765583974e+00,8.527923866231869043e-01,1.997467469903495108e+00,2.043342966467817323e+00,2.665082523224391875e-01,8.276678398709491624e-01,3.998326031727455376e+00,4.664629266073316849e-01,1.038868943003399270e+00,3.902230490939109231e+00,7.860131642508487448e-02,1.979068005716478451e+00,3.996090058628689601e+00,7.050954786719181300e-01,1.984658347973787151e+00]
+    # # [3.750300356647885192e+00,1.030159720710949411e+00,4.417624295582034399e-01,3.971451140049683470e+00,2.583085823514462698e-01,1.211155511068839202e-02,1.337473167006886676e+00,9.195573510150270580e-02,1.113593940872910748e+00,3.999926355765583974e+00,8.527923866231869043e-01,1.997467469903495108e+00,2.043342966467817323e+00,2.665082523224391875e-01,8.276678398709491624e-01,3.998326031727455376e+00,4.664629266073316849e-01,1.038868943003399270e+00,3.902230490939109231e+00,7.860131642508487448e-02,1.979068005716478451e+00,3.996090058628689601e+00,7.050954786719181300e-01,1.984658347973787151e+00]
+    # X = np.arange(0.5,4,1).reshape(-1,1)
+    # y = np.asarray(ind).reshape(-1,6)
+    # model = KernelRidge(alpha=1.0)
+    # model.fit(X,y)
+    # f1, f2 = test_pid_parameter(model,1,2,True)
+    # print(f1)
+    # print(f2)
     GA()
